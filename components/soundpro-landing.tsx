@@ -138,7 +138,7 @@ export function SoundProLanding() {
           scrollY > 50 ? "shadow-md" : ""
         }`}
       >
-        <div className="container flex h-16 items-center justify-between">
+        <div className="w-full px-4 md:px-6 lg:px-8 flex h-16 items-center justify-between max-w-full">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center space-x-3">
               <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-10 w-auto" />
@@ -182,7 +182,7 @@ export function SoundProLanding() {
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
-            className="container grid gap-3 pb-8 pt-6"
+            className="w-full px-4 md:px-6 lg:px-8 grid gap-3 pb-8 pt-6"
           >
             {["Perché", "Metodo", "Case", "Contatti"].map((item, index) => (
               <motion.div key={index} variants={itemFadeIn}>
@@ -203,8 +203,8 @@ export function SoundProLanding() {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="w-full min-h-screen flex items-center overflow-hidden relative">
-          <div className="container px-4 md:px-6 relative z-10 w-full">
-            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
+          <div className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full">
+            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center max-w-7xl mx-auto">
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -308,7 +308,7 @@ export function SoundProLanding() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeIn}
-            className="container px-4 md:px-6 relative z-10"
+            className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
           >
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -325,7 +325,7 @@ export function SoundProLanding() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-3"
+              className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto"
             >
               {[
                 {
@@ -374,12 +374,13 @@ export function SoundProLanding() {
 
         {/* Method Section */}
         <section id="method" className="w-full py-12 md:py-24 lg:py-32 relative overflow-hidden">
-          <motion.div
+          <div className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full">
+            <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="container px-4 md:px-6"
+            className="w-full"
           >
             <motion.div 
               variants={fadeIn}
@@ -396,7 +397,7 @@ export function SoundProLanding() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-4 relative"
+              className="grid gap-6 md:grid-cols-4 relative max-w-6xl mx-auto"
             >
               {/* Animated connecting line */}
               <motion.div
@@ -467,7 +468,7 @@ export function SoundProLanding() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeIn}
-            className="container px-4 md:px-6 relative z-10"
+            className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
           >
             <motion.div 
               variants={fadeIn}
@@ -484,7 +485,7 @@ export function SoundProLanding() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+              className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto"
             >
               {[
                 {
@@ -539,7 +540,7 @@ export function SoundProLanding() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeIn}
-            className="container px-4 md:px-6 relative z-10"
+            className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
           >
             <motion.div
               whileHover={{ boxShadow: "0 20px 60px rgba(107, 163, 212, 0.2)" }}
@@ -587,9 +588,9 @@ export function SoundProLanding() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeIn}
-            className="container px-4 md:px-6 relative z-10"
+            className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
           >
-            <div className="grid items-center gap-8 lg:grid-cols-2">
+            <div className="grid items-center gap-8 lg:grid-cols-2 max-w-5xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -690,20 +691,22 @@ export function SoundProLanding() {
 
       {/* Footer */}
       <footer className="w-full border-t">
-        <div className="container py-8 px-4 md:px-6">
-          <div className="grid gap-8 md:grid-cols-3">
+        <div className="w-full px-4 md:px-6 lg:px-8 py-8 max-w-full">
+          <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
             <div className="space-y-3">
-              <h3 className="font-bold text-lg">SoundPro Acoustic</h3>
+              <div className="flex items-center gap-2">
+                <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-8 w-auto" />
+              </div>
               <p className="text-sm text-muted-foreground">
                 Pannelli acustici su misura per home studio, sale d'ascolto e ambienti professionali.
               </p>
               <div className="flex gap-3">
-                <Link href="#" className="text-muted-foreground hover:text-primary">
+                <a href="https://www.instagram.com/soundproacoustic/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <Instagram className="h-5 w-5" />
-                </Link>
-                <Link href="#" className="text-muted-foreground hover:text-primary">
+                </a>
+                <a href="https://www.facebook.com/358599897338607?ref=NONE_xav_ig_profile_page_web" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                   <Facebook className="h-5 w-5" />
-                </Link>
+                </a>
               </div>
             </div>
             <div className="space-y-3">
@@ -734,13 +737,10 @@ export function SoundProLanding() {
               </p>
             </div>
           </div>
-          <div className="border-t mt-8 pt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="flex items-center gap-3">
-              <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-8 w-auto" />
-              <p className="text-xs text-muted-foreground">
-                &copy; {new Date().getFullYear()} SoundPro Acoustic. All rights reserved.
-              </p>
-            </div>
+          <div className="border-t mt-8 pt-8 flex flex-col items-center justify-between gap-4 md:flex-row max-w-6xl mx-auto">
+            <p className="text-xs text-muted-foreground">
+              &copy; {new Date().getFullYear()} SoundPro Acoustic. All rights reserved.
+            </p>
             <p className="text-xs text-muted-foreground">Fatto con passione a Ercolano</p>
           </div>
         </div>
