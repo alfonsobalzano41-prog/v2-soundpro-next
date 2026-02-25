@@ -459,6 +459,7 @@ export function SoundProLanding() {
               ))}
             </motion.div>
           </motion.div>
+          </div>
         </section>
 
         {/* Cases Section */}
