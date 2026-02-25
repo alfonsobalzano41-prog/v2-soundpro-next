@@ -106,6 +106,10 @@ export function SoundProLanding() {
     }
 
     window.addEventListener("scroll", handleScroll)
+    
+    // Enable smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth'
+    
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
@@ -124,7 +128,7 @@ export function SoundProLanding() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-background via-background to-muted/20" style={{ scrollBehavior: 'smooth' }}>
       {/* Header */}
       <motion.header
         initial={{ y: -100 }}
@@ -137,7 +141,7 @@ export function SoundProLanding() {
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center space-x-3">
-              <span className="font-bold text-xl">SoundPro Acoustic</span>
+              <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-10 w-auto" />
             </Link>
           </div>
           <nav className="hidden md:flex gap-6">
@@ -198,9 +202,9 @@ export function SoundProLanding() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 overflow-hidden relative">
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="grid gap-8 lg:grid-cols-[1fr_400px] lg:gap-8 xl:grid-cols-[1fr_600px]">
+        <section className="w-full min-h-screen flex items-center overflow-hidden relative">
+          <div className="container px-4 md:px-6 relative z-10 w-full">
+            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -273,11 +277,11 @@ export function SoundProLanding() {
                 initial={{ opacity: 0, x: 100 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="flex items-center justify-center"
+                className="flex items-center justify-center h-full"
               >
                 <motion.div
                   animate={floatingAnimation}
-                  className="relative h-[350px] w-full md:h-[450px] lg:h-[500px] xl:h-[550px] overflow-hidden rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shadow-2xl"
+                  className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shadow-2xl"
                 >
                   <motion.div
                     animate={pulseAnimation}
@@ -731,9 +735,12 @@ export function SoundProLanding() {
             </div>
           </div>
           <div className="border-t mt-8 pt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} SoundPro Acoustic. All rights reserved.
-            </p>
+            <div className="flex items-center gap-3">
+              <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-8 w-auto" />
+              <p className="text-xs text-muted-foreground">
+                &copy; {new Date().getFullYear()} SoundPro Acoustic. All rights reserved.
+              </p>
+            </div>
             <p className="text-xs text-muted-foreground">Fatto con passione a Ercolano</p>
           </div>
         </div>
