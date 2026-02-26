@@ -26,7 +26,7 @@ const fadeIn = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.6,   },
   },
 }
 
@@ -35,7 +35,7 @@ const slideInLeft = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.8, ease: "easeOut" },
+transition: { duration: 0.8 },
   },
 }
 
@@ -44,7 +44,7 @@ const slideInRight = {
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.8, ease: "easeOut" },
+transition: { duration: 0.8 },
   },
 }
 
@@ -53,7 +53,7 @@ const scaleIn = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.6,   },
   },
 }
 
