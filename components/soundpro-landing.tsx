@@ -86,16 +86,6 @@ const itemFadeIn = {
   },
 }
 
-const pulseAnimation = {
-  scale: [1, 1.03, 1],
-  transition: {
-    duration: 2.5,
-    repeat: Infinity,
-    ease: easeInOut,
-  },
-}
-
-
 export function SoundProLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
@@ -325,17 +315,6 @@ export function SoundProLanding() {
                   fill
                   className="object-cover rounded-3xl"
                 />
-                  <motion.div
-                    animate={pulseAnimation}
-                    className="text-center"
-                  >
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                    >
-                      <Sparkles className="h-12 w-12 mx-auto mb-3 opacity-70 text-primary" />
-                    </motion.div>
-                  </motion.div>
                 </motion.div>
               </motion.div>
             </div>
