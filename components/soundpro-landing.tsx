@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion, easeInOut } from "framer-motion"  // ✓ Aggiungi easeInOut qui
 import {
   Menu,
   X,
@@ -26,7 +26,7 @@ const fadeIn = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6,   },
+    transition: { duration: 0.6 },
   },
 }
 
@@ -35,7 +35,7 @@ const slideInLeft = {
   visible: {
     opacity: 1,
     x: 0,
-transition: { duration: 0.8 },
+    transition: { duration: 0.8 },
   },
 }
 
@@ -44,7 +44,7 @@ const slideInRight = {
   visible: {
     opacity: 1,
     x: 0,
-transition: { duration: 0.8 },
+    transition: { duration: 0.8 },
   },
 }
 
@@ -53,7 +53,7 @@ const scaleIn = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.6,   },
+    transition: { duration: 0.6 },
   },
 }
 
@@ -68,21 +68,21 @@ const staggerContainer = {
   },
 }
 
-const itemFadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-transition: { duration: 0.5 }
-  },
-}
-
 const floatingAnimation = {
   y: [0, -8, 0],
   transition: {
     duration: 4,
     repeat: Infinity,
-    ease: "easeInOut",
+    ease: easeInOut,
+  },
+}
+
+const itemFadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 }
   },
 }
 
@@ -91,9 +91,10 @@ const pulseAnimation = {
   transition: {
     duration: 2.5,
     repeat: Infinity,
-    ease: "easeInOut",
+    ease: easeInOut,
   },
 }
+
 
 export function SoundProLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
