@@ -164,7 +164,11 @@ export function SoundProLanding() {
             </motion.div>
           </div>
           <div className="hidden md:flex items-center gap-3">
-            <Button size="sm" className="rounded-full hover:scale-105 transition-transform duration-150">
+            <Button
+              size="sm"
+              className="rounded-full hover:scale-105 transition-transform duration-150"
+              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+            >
               Richiedi analisi gratuita
             </Button>
           </div>
