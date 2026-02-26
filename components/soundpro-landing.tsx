@@ -477,7 +477,7 @@ export function SoundProLanding() {
                     boxShadow: "0 20px 40px rgba(107, 163, 212, 0.15)",
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 10 }}
-                  className="rounded-3xl border bg-background p-6 shadow-sm cursor-pointer group relative overflow-hidden"
+                  className="rounded-3xl border bg-background p-6 shadow-sm group relative overflow-hidden"
                 >
                   <div className="relative z-10 space-y-3">
                     <div 
@@ -648,7 +648,7 @@ export function SoundProLanding() {
                       key={index}
                       whileHover={{ x: 10 }}
                       transition={{ type: "spring", stiffness: 300 }}
-                      className="flex items-start gap-3 cursor-pointer group"
+                      className="flex items-start gap-3 group"
                     >
                       <motion.div
                         className="rounded-full bg-primary/20 p-2 group-hover:bg-primary/30 transition-colors"
