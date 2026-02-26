@@ -90,6 +90,7 @@ export function SoundProLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const [formMessage, setFormMessage] = useState("")
+  const [selectedFilesCount, setSelectedFilesCount] = useState(0)
   // Feature flags
   const ENABLE_SECTION_DIVIDERS = true
   const USE_CUSTOM_PALETTE = true // toggle palette application
@@ -129,6 +130,7 @@ export function SoundProLanding() {
     setFormMessage("Ricevuto! Ti contatteremo entro 24 ore. Grazie di aver scelto SoundPro Acoustic.")
     setTimeout(() => {
       setFormMessage("")
+      setSelectedFilesCount(0)
       const form = e.currentTarget
       form.reset()
     }, 3000)
@@ -690,6 +692,23 @@ export function SoundProLanding() {
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }}>
                     <Input type="text" placeholder="Misura stanza (es: 5m x 4m x 3m)" className="rounded-2xl" />
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.01 }} className="space-y-1">
+                    <label htmlFor="attachments" className="text-sm font-medium">
+                      Allegati (opzionale)
+                    </label>
+                    <input
+                      id="attachments"
+                      name="attachments"
+                      type="file"
+                      multiple
+                      accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                      onChange={(e) => setSelectedFilesCount(e.target.files?.length ?? 0)}
+                      className="block w-full rounded-2xl border border-input bg-background px-3 py-2 text-xs sm:text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-xs sm:file:text-sm file:font-medium file:text-primary hover:file:bg-primary/20"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Carica planimetrie, foto o documenti ({selectedFilesCount} selezionati).
+                    </p>
                   </motion.div>
                   <label className="flex items-center gap-2">
                     <input type="checkbox" required />
