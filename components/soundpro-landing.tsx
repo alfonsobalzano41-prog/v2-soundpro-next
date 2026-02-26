@@ -605,7 +605,11 @@ export function SoundProLanding() {
                   whileTap={{ scale: 0.95 }}
                   className="mt-6"
                 >
-                  <Button size="lg" className="rounded-full">
+                  <Button
+                    size="lg"
+                    className="rounded-full"
+                    onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                  >
                     Inizia qui
                   </Button>
                 </motion.div>
