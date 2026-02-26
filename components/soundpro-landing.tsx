@@ -99,6 +99,22 @@ export function SoundProLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const [formMessage, setFormMessage] = useState("")
+  // Feature flags
+  const ENABLE_SECTION_DIVIDERS = true
+  const USE_CUSTOM_PALETTE = true // toggle palette application
+
+  // color palette (easy to override or disable)
+  const palette = {
+    primary: "#D4A574",      // rovere chiaro
+    primaryAlt: "#A0845C",   // rovere profondo
+    secondary: "#6B7280",    // grigio neutro
+    accent: "#5B9FBD",       // celeste soft
+    accentAlt: "#7FB3D5",    // celeste chiaro
+    bgPrimary: "#FFFFFF",    // bianco puro
+    bgSecondary: "#F9FAFB",  // grigio ultra-light
+    textPrimary: "#1F2937",  // grigio scuro
+    textSecondary: "#9CA3AF",// grigio medio
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -128,38 +144,36 @@ export function SoundProLanding() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-background via-background to-muted/20" style={{ scrollBehavior: 'smooth' }}>
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-[#f5f0e8] via-[#e1e1e1] to-muted/20" style={{ scrollBehavior: 'smooth', backgroundColor: '#f5f0e8' }}>
       {/* Header */}
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
-        className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${
+        className={`sticky top-0 z-50 w-full border-b bg-background backdrop-blur supports-[backdrop-filter]:bg-background/60 ${
           scrollY > 50 ? "shadow-md" : ""
         }`}
       >
         <div className="w-full px-4 md:px-6 lg:px-8 flex h-16 items-center justify-between max-w-full">
-          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center space-x-3">
-              <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-10 w-auto" />
+              <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-16 md:h-20 w-auto" />
             </Link>
           </div>
-          <nav className="hidden md:flex gap-6">
-            <Link href="#why" className="text-sm font-medium transition-colors hover:text-primary">
-              Perché
-            </Link>
-            <Link href="#method" className="text-sm font-medium transition-colors hover:text-primary">
-              Metodo
-            </Link>
-            <Link href="#cases" className="text-sm font-medium transition-colors hover:text-primary">
-              Case
-            </Link>
-            <Link href="#contact" className="text-sm font-medium transition-colors hover:text-primary">
-              Contatti
-            </Link>
-          </nav>
+          {/* services marquee center */}
+          <div className="hidden md:flex items-center flex-1 mx-4 overflow-hidden relative">
+            <motion.div
+              className="whitespace-nowrap text-sm md:text-base flex items-center"
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ repeat: Infinity, duration: 24, ease: 'linear' }}
+            >
+              {['Trattamento acustico', 'Isolamento acustico', 'Design', 'Consulenza']
+                .map((t, i, arr) => `${t}${i < arr.length - 1 ? ' | ' : ''}`)
+                .join(' ')}
+            </motion.div>
+          </div>
           <div className="hidden md:flex items-center gap-3">
-            <Button size="sm" className="rounded-full">
+            <Button size="sm" className="rounded-full hover:scale-105 transition-transform duration-150">
               Richiedi analisi gratuita
             </Button>
           </div>
@@ -213,17 +227,28 @@ export function SoundProLanding() {
                 className="flex flex-col justify-center space-y-4 py-10"
               >
                 <div className="space-y-3">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
-                  >
-                    <motion.span animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity }}>
-                      <Zap className="mr-1 h-3 w-3" />
-                    </motion.span>
-                    Pannelli acustici su misura
-                  </motion.div>
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: 0.1 }}
+                      className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                    >
+                      <motion.span animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity }}>
+                        <Zap className="mr-1 h-3 w-3" />
+                      </motion.span>
+                      Pannelli acustici su misura
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: 0.15 }}
+                      className="inline-flex items-center rounded-full bg-muted/10 px-3 py-1 text-sm text-muted-foreground"
+                    >
+                      <Sparkles className="mr-1 h-3 w-3 text-primary" />
+                      Spazio sonoro ottimizzato
+                    </motion.div>
+                  </div>
                   <motion.h1
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -236,7 +261,7 @@ export function SoundProLanding() {
                       animate={{ backgroundPosition: ["0% center", "100% center", "0% center"] }}
                       transition={{ duration: 3, repeat: Infinity }}
                     >
-                      Inizia da un'analisi reale.
+                      Scopri come trasformarlo in 48 ore.
                     </motion.span>
                   </motion.h1>
                   <motion.p
@@ -245,7 +270,7 @@ export function SoundProLanding() {
                     transition={{ duration: 0.7, delay: 0.4 }}
                     className="max-w-[600px] text-muted-foreground md:text-xl"
                   >
-                    Misuriamo l'acustica del tuo ambiente e progettiamo pannelli su misura. Non standard. Tuoi.
+                    Non sono i pannelli che mancano. È l'analisi giusta. Progettiamo l'acustica del tuo spazio con misurazioni reali.
                   </motion.p>
                 </div>
                 <motion.div
@@ -255,7 +280,11 @@ export function SoundProLanding() {
                   className="flex flex-col gap-3 sm:flex-row"
                 >
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button size="lg" className="rounded-full group">
+                    <Button
+                      size="lg"
+                      className="rounded-full group"
+                      onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                    >
                       Richiedi analisi gratuita
                       <motion.span
                         initial={{ x: 0 }}
@@ -267,22 +296,34 @@ export function SoundProLanding() {
                     </Button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button variant="outline" size="lg" className="rounded-full">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="rounded-full"
+                      onClick={() => document.getElementById('why')?.scrollIntoView({ behavior: 'smooth' })}
+                    >
                       Scopri di più
                     </Button>
                   </motion.div>
                 </motion.div>
               </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="flex items-center justify-center h-full"
+                <motion.div
+                  initial={{ opacity: 0, x: 100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="flex items-center justify-center h-full"
               >
                 <motion.div
                   animate={floatingAnimation}
-                  className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shadow-2xl"
+                  className="relative w-full h-[420px] sm:h-[520px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-3xl flex items-center justify-center shadow-2xl"
                 >
+                {/* Replace gradient with hero product image */}
+                <Image
+                  src="/hero-product.jpg"
+                  alt="Pannello acustico personalizzato"
+                  fill
+                  className="object-cover rounded-3xl"
+                />
                   <motion.div
                     animate={pulseAnimation}
                     className="text-center"
@@ -293,7 +334,6 @@ export function SoundProLanding() {
                     >
                       <Sparkles className="h-12 w-12 mx-auto mb-3 opacity-70 text-primary" />
                     </motion.div>
-                    <p className="text-sm text-muted-foreground">Spazio sonoro ottimizzato</p>
                   </motion.div>
                 </motion.div>
               </motion.div>
@@ -301,79 +341,9 @@ export function SoundProLanding() {
           </div>
         </section>
 
-        {/* Why Section */}
-        <section id="why" className="w-full py-12 md:py-24 lg:py-32 bg-muted/20 relative overflow-hidden">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeIn}
-            className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
-          >
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Perché i pannelli standard non risolvono il tuo problema
-              </h2>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                Comprare pannelli acustici online è facile. Risolvere davvero i problemi di suono del tuo spazio è
-                un'altra cosa.
-              </p>
-            </div>
-
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto"
-            >
-              {[
-                {
-                  icon: "🏠",
-                  title: "Ogni stanza è unica",
-                  description:
-                    "Rimbombo, riverbero e problemi di fase cambiano da ambiente a ambiente. I pannelli generici ignorano questo.",
-                },
-                {
-                  icon: "📏",
-                  title: "Misurazioni precise = Risultati reali",
-                  description:
-                    "Senza dati acustici, stai solo indovinando. Noi misuriamo con strumenti professionali.",
-                },
-                {
-                  icon: "🛠️",
-                  title: "Artigianalità vs. Industriale",
-                  description:
-                    "Pannelli su misura, realizzati a mano, con materiali scelti per il TUO spazio.",
-                },
-              ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  variants={itemFadeIn}
-                  whileHover={{ 
-                    y: -10, 
-                    boxShadow: "0 20px 40px rgba(107, 163, 212, 0.15)",
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 10 }}
-                  className="rounded-3xl border bg-background p-6 shadow-sm cursor-pointer group relative overflow-hidden"
-                >
-                  <div className="relative z-10 space-y-3">
-                    <div 
-                      className="text-4xl"
-                    >
-                      {item.icon}
-                    </div>
-                    <h3 className="text-xl font-bold">{item.title}</h3>
-                    <p className="text-muted-foreground">{item.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
-        </section>
 
         {/* Method Section */}
-        <section id="method" className="w-full py-12 md:py-24 lg:py-32 relative overflow-hidden">
+        <section id="method" className="w-full py-8 md:py-16 lg:py-24 bg-gray-100 relative overflow-hidden shadow-inner transform-gpu" style={{ transform: 'rotateX(-2deg)', perspective: '1000px' }}>
           <div className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full">
             <motion.div
             variants={staggerContainer}
@@ -460,6 +430,82 @@ export function SoundProLanding() {
             </motion.div>
           </motion.div>
           </div>
+        </section>
+
+        {/* Why Section */}
+        {ENABLE_SECTION_DIVIDERS && (
+          <div className="w-full flex justify-center">
+            <div className="w-full max-w-7xl h-1 sm:h-1.5 rounded-full bg-gradient-to-r from-cyan-400/60 via-white to-cyan-400/60 opacity-90 shadow-sm animate-pulse my-6 mx-4" />
+          </div>
+        )}
+        <section id="why" className="w-full py-8 md:py-16 lg:py-24 bg-[url('/textures/wood-light.png')] bg-cover bg-opacity-20 relative overflow-hidden shadow-2xl transform-gpu" style={{ transform: 'rotateX(2deg)', perspective: '1000px' }}>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+            className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
+          >
+            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Perché i pannelli standard non risolvono il tuo problema
+              </h2>
+              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+                Comprare pannelli acustici online è facile. Risolvere davvero i problemi di suono del tuo spazio è
+                un'altra cosa.
+              </p>
+            </div>
+
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto"
+            >
+              {[
+                {
+                  icon: "🏠",
+                  title: "Ogni stanza è unica",
+                  description:
+                    "Rimbombo, riverbero e problemi di fase cambiano da ambiente a ambiente. I pannelli generici ignorano questo.",
+                },
+                {
+                  icon: "📏",
+                  title: "Misurazioni precise = Risultati reali",
+                  description:
+                    "Senza dati acustici, stai solo indovinando. Noi misuriamo con strumenti professionali.",
+                },
+                {
+                  icon: "🛠️",
+                  title: "Artigianalità vs. Industriale",
+                  description:
+                    "Pannelli su misura, realizzati a mano, con materiali scelti per il TUO spazio.",
+                },
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  variants={itemFadeIn}
+                  whileHover={{ 
+                    y: -10, 
+                    boxShadow: "0 20px 40px rgba(107, 163, 212, 0.15)",
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                  className="rounded-3xl border bg-background p-6 shadow-sm cursor-pointer group relative overflow-hidden"
+                >
+                  <div className="relative z-10 space-y-3">
+                    <div 
+                      className="text-4xl"
+                    >
+                      {item.icon}
+                    </div>
+                    <h3 className="text-xl font-bold">{item.title}</h3>
+                    <p className="text-muted-foreground">{item.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
         </section>
 
         {/* Cases Section */}
