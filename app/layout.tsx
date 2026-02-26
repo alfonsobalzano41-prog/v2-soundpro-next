@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SoundPro Acoustic",
-  description: "Ercolano - Napoli",
+  description: "Progetti acustici su misura per ogni ambiente",
 };
 
 export default function RootLayout({
