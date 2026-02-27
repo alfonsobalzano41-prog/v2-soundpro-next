@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { motion, easeInOut } from "framer-motion"  // ✓ Aggiungi easeInOut qui
+import { AnimatePresence, motion, easeInOut } from "framer-motion"  // ✓ Aggiungi easeInOut qui
 import {
   Menu,
   X,
@@ -86,10 +86,25 @@ const itemFadeIn = {
   },
 }
 
+const socialLinks = [
+  {
+    href: "https://www.instagram.com/soundproacoustic/",
+    label: "Instagram",
+    icon: Instagram,
+  },
+  {
+    href: "https://www.facebook.com/358599897338607?ref=NONE_xav_ig_profile_page_web",
+    label: "Facebook",
+    icon: Facebook,
+  },
+]
+
 export function SoundProLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
-  const [formMessage, setFormMessage] = useState("")
+  const [formError, setFormError] = useState("")
+  const [isFormCompleted, setIsFormCompleted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedFilesCount, setSelectedFilesCount] = useState(0)
   // Feature flags
   const ENABLE_SECTION_DIVIDERS = true
@@ -125,15 +140,31 @@ export function SoundProLanding() {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setFormMessage("Ricevuto! Ti contatteremo entro 24 ore. Grazie di aver scelto SoundPro Acoustic.")
-    setTimeout(() => {
-      setFormMessage("")
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    setIsSubmitting(true)
+    setFormError("")
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error("submit_failed")
+      }
+
+      setIsFormCompleted(true)
       setSelectedFilesCount(0)
-      const form = e.currentTarget
       form.reset()
-    }, 3000)
+    } catch {
+      setFormError("Invio non riuscito. Riprova tra poco o contattaci via email.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -267,7 +298,7 @@ export function SoundProLanding() {
                     transition={{ duration: 0.7, delay: 0.4 }}
                     className="max-w-[600px] text-muted-foreground md:text-xl"
                   >
-                    Non sono i pannelli che mancano. È l'analisi giusta. Progettiamo l'acustica del tuo spazio con misurazioni reali.
+                    Non sono i pannelli che mancano. È l&apos;analisi giusta. Progettiamo l&apos;acustica del tuo spazio con misurazioni reali.
                   </motion.p>
                 </div>
                 <motion.div
@@ -438,7 +469,7 @@ export function SoundProLanding() {
               </h2>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
                 Comprare pannelli acustici online è facile. Risolvere davvero i problemi di suono del tuo spazio è
-                un'altra cosa.
+                un&apos;altra cosa.
               </p>
             </div>
 
@@ -595,7 +626,7 @@ export function SoundProLanding() {
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className="mx-auto max-w-[700px] text-muted-foreground md:text-xl"
                 >
-                  Richiedi l'analisi acustica gratuita. Ti contatteremo entro 24 ore.
+                  Richiedi l&apos;analisi acustica gratuita. Ti contatteremo entro 24 ore.
                 </motion.p>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -672,71 +703,129 @@ export function SoundProLanding() {
                 className="rounded-3xl border bg-background p-6 shadow-sm hover:shadow-md transition-shadow"
               >
                 <h3 className="text-xl font-bold mb-2">Contattaci</h3>
-                <form onSubmit={handleFormSubmit} className="space-y-3">
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <motion.div whileHover={{ scale: 1.02 }}>
-                      <Input placeholder="Nome" required className="rounded-2xl" />
-                    </motion.div>
-                    <motion.div whileHover={{ scale: 1.02 }}>
-                      <Input type="email" placeholder="Email" required className="rounded-2xl" />
-                    </motion.div>
-                  </div>
-                  <motion.div whileHover={{ scale: 1.02 }}>
-                    <Input type="tel" placeholder="Telefono (opzionale)" className="rounded-2xl" />
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.02 }}>
-                    <select className="w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm" required>
-                      <option value="">Seleziona servizio</option>
-                      <option>Progetto acustico (sopralluogo + misurazione) - Gratuito</option>
-                      <option>Prodotti su misura (pannelli acustici artigianali)</option>
-                    </select>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.02 }}>
-                    <Textarea placeholder="Descrivi il tuo progetto" required className="rounded-2xl" rows={4} />
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.02 }}>
-                    <Input type="text" placeholder="Misura stanza (es: 5m x 4m x 3m)" className="rounded-2xl" />
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.01 }} className="space-y-1">
-                    <label htmlFor="attachments" className="text-sm font-medium">
-                      Allegati (opzionale)
-                    </label>
-                    <input
-                      id="attachments"
-                      name="attachments"
-                      type="file"
-                      multiple
-                      accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
-                      onChange={(e) => setSelectedFilesCount(e.target.files?.length ?? 0)}
-                      className="block w-full rounded-2xl border border-input bg-background px-3 py-2 text-xs sm:text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-xs sm:file:text-sm file:font-medium file:text-primary hover:file:bg-primary/20"
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      Carica planimetrie, foto o documenti ({selectedFilesCount} selezionati).
-                    </p>
-                  </motion.div>
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" required />
-                    <span className="text-sm">Accetto la privacy</span>
-                  </label>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button type="submit" className="w-full rounded-full">
-                      Invia
-                    </Button>
-                  </motion.div>
-                  {formMessage && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
+                <AnimatePresence mode="wait">
+                  {!isFormCompleted ? (
+                    <motion.form
+                      key="contact-form"
+                      onSubmit={handleFormSubmit}
+                      className="space-y-3"
+                      initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="text-sm text-green-600 mt-2"
+                      exit={{ opacity: 0, y: -16, scale: 0.98 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
                     >
-                      {formMessage}
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <motion.div whileHover={{ scale: 1.02 }}>
+                          <Input name="name" placeholder="Nome" required className="rounded-2xl" />
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.02 }}>
+                          <Input name="email" type="email" placeholder="Email" required className="rounded-2xl" />
+                        </motion.div>
+                      </div>
+                      <motion.div whileHover={{ scale: 1.02 }}>
+                        <Input name="phone" type="tel" placeholder="Telefono (opzionale)" className="rounded-2xl" />
+                      </motion.div>
+                      <motion.div whileHover={{ scale: 1.02 }}>
+                        <select name="service" className="w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm" required>
+                          <option value="">Seleziona servizio</option>
+                          <option>Progetto acustico (sopralluogo + misurazione) - Gratuito</option>
+                          <option>Prodotti su misura (pannelli acustici artigianali)</option>
+                        </select>
+                      </motion.div>
+                      <motion.div whileHover={{ scale: 1.02 }}>
+                        <Textarea name="message" placeholder="Descrivi il tuo progetto" required className="rounded-2xl" rows={4} />
+                      </motion.div>
+                      <motion.div whileHover={{ scale: 1.02 }}>
+                        <Input name="roomSize" type="text" placeholder="Misura stanza (es: 5m x 4m x 3m)" className="rounded-2xl" />
+                      </motion.div>
+                      <motion.div whileHover={{ scale: 1.01 }} className="space-y-1">
+                        <label htmlFor="attachments" className="text-sm font-medium">
+                          Allegati (opzionale)
+                        </label>
+                        <input
+                          id="attachments"
+                          name="attachments"
+                          type="file"
+                          multiple
+                          accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                          onChange={(e) => setSelectedFilesCount(e.target.files?.length ?? 0)}
+                          className="block w-full rounded-2xl border border-input bg-background px-3 py-2 text-xs sm:text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-xs sm:file:text-sm file:font-medium file:text-primary hover:file:bg-primary/20"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Carica planimetrie, foto o documenti ({selectedFilesCount} selezionati).
+                        </p>
+                      </motion.div>
+                      <label className="flex items-center gap-2">
+                        <input name="privacyAccepted" type="checkbox" required />
+                        <span className="text-sm">Accetto la privacy</span>
+                      </label>
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Button type="submit" className="w-full rounded-full" disabled={isSubmitting}>
+                          {isSubmitting ? "Invio in corso..." : "Invia"}
+                        </Button>
+                      </motion.div>
+                      {formError && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="mt-2 text-sm text-red-600"
+                        >
+                          {formError}
+                        </motion.div>
+                      )}
+                    </motion.form>
+                  ) : (
+                    <motion.div
+                      key="contact-thank-you"
+                      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.45, ease: "easeOut" }}
+                      className="space-y-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-primary/5 p-6"
+                    >
+                      <div className="inline-flex items-center rounded-full border border-primary/30 bg-background/80 px-3 py-1 text-xs font-medium text-primary">
+                        Richiesta inviata
+                      </div>
+                      <div className="space-y-2">
+                        <h4 className="text-2xl font-bold tracking-tight">Grazie per averci contattato.</h4>
+                        <p className="text-sm text-muted-foreground sm:text-base">
+                          Ti risponderemo entro 24 ore con i prossimi passi per l&apos;analisi acustica del tuo spazio.
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-primary/20 bg-background/70 p-4">
+                        <p className="text-sm font-medium">Nel frattempo, seguici sui social:</p>
+                        <div className="mt-3 flex items-center gap-3">
+                          {socialLinks.map((social) => (
+                            <a
+                              key={social.label}
+                              href={social.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="rounded-full border border-input bg-background p-2 text-muted-foreground transition-colors hover:text-primary"
+                              aria-label={social.label}
+                            >
+                              <social.icon className="h-5 w-5" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        className="rounded-full"
+                        onClick={() => {
+                          setIsFormCompleted(false)
+                          setFormError("")
+                        }}
+                      >
+                        Invia un&apos;altra richiesta
+                      </Button>
                     </motion.div>
                   )}
-                </form>
+                </AnimatePresence>
               </motion.div>
             </div>
           </motion.div>
@@ -752,15 +841,21 @@ export function SoundProLanding() {
                 <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-8 w-auto" />
               </div>
               <p className="text-sm text-muted-foreground">
-                Pannelli acustici su misura per home studio, sale d'ascolto e ambienti professionali.
+                Pannelli acustici su misura per home studio, sale d&apos;ascolto e ambienti professionali.
               </p>
               <div className="flex gap-3">
-                <a href="https://www.instagram.com/soundproacoustic/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a href="https://www.facebook.com/358599897338607?ref=NONE_xav_ig_profile_page_web" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-                  <Facebook className="h-5 w-5" />
-                </a>
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground transition-colors hover:text-primary"
+                    aria-label={social.label}
+                  >
+                    <social.icon className="h-5 w-5" />
+                  </a>
+                ))}
               </div>
             </div>
             <div className="space-y-3">
