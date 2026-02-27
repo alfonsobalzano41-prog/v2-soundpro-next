@@ -702,7 +702,6 @@ export function SoundProLanding() {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="rounded-3xl border bg-background p-6 shadow-sm hover:shadow-md transition-shadow"
               >
-                <h3 className="text-xl font-bold mb-2">Contattaci</h3>
                 <AnimatePresence mode="wait">
                   {!isFormCompleted ? (
                     <motion.form
@@ -714,6 +713,7 @@ export function SoundProLanding() {
                       exit={{ opacity: 0, y: -16, scale: 0.98 }}
                       transition={{ duration: 0.35, ease: "easeOut" }}
                     >
+                      <h3 className="mb-2 text-xl font-bold">Contattaci</h3>
                       <div className="grid gap-3 sm:grid-cols-2">
                         <motion.div whileHover={{ scale: 1.02 }}>
                           <Input name="name" placeholder="Nome" required className="rounded-2xl" />
@@ -785,7 +785,7 @@ export function SoundProLanding() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -12 }}
                       transition={{ duration: 0.45, ease: "easeOut" }}
-                      className="space-y-5 rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-primary/5 p-6"
+                      className="space-y-5"
                     >
                       <div className="inline-flex items-center rounded-full border border-primary/30 bg-background/80 px-3 py-1 text-xs font-medium text-primary">
                         Richiesta inviata
@@ -813,16 +813,6 @@ export function SoundProLanding() {
                           ))}
                         </div>
                       </div>
-                      <Button
-                        variant="outline"
-                        className="rounded-full"
-                        onClick={() => {
-                          setIsFormCompleted(false)
-                          setFormError("")
-                        }}
-                      >
-                        Invia un&apos;altra richiesta
-                      </Button>
                     </motion.div>
                   )}
                 </AnimatePresence>
