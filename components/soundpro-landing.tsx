@@ -823,7 +823,7 @@ export function SoundProLanding() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t">
+      <footer className="w-full border-t bg-background">
         <div className="w-full px-4 md:px-6 lg:px-8 py-8 max-w-full">
           <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
             <div className="space-y-3">
