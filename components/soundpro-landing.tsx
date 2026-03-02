@@ -5,9 +5,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { AnimatePresence, motion, easeInOut } from "framer-motion"  // ✓ Aggiungi easeInOut qui
 import {
-  Menu,
   X,
   ArrowRight,
+  ChevronDown,
   ChevronRight,
   Mail,
   MapPin,
@@ -99,9 +99,16 @@ const socialLinks = [
   },
 ]
 
+const mobileNavItems = [
+  { label: "Perché", id: "why" },
+  { label: "Metodo", id: "method" },
+  { label: "Case", id: "cases" },
+  { label: "Contatti", id: "contact" },
+]
+
 export function SoundProLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
+  const [isScrolled, setIsScrolled] = useState(false)
   const [formError, setFormError] = useState("")
   const [isFormCompleted, setIsFormCompleted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -124,16 +131,30 @@ export function SoundProLanding() {
   }
 
   useEffect(() => {
+    let rafId = 0
+    const root = document.documentElement
+    const previousScrollBehavior = root.style.scrollBehavior
+
     const handleScroll = () => {
-      setScrollY(window.scrollY)
+      if (rafId) return
+      rafId = window.requestAnimationFrame(() => {
+        const nextIsScrolled = window.scrollY > 50
+        setIsScrolled((prev) => (prev === nextIsScrolled ? prev : nextIsScrolled))
+        rafId = 0
+      })
     }
 
-    window.addEventListener("scroll", handleScroll)
-    
-    // Enable smooth scroll behavior
-    document.documentElement.style.scrollBehavior = 'smooth'
-    
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    root.style.scrollBehavior = "smooth"
+    handleScroll()
+
+    return () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId)
+      }
+      window.removeEventListener("scroll", handleScroll)
+      root.style.scrollBehavior = previousScrollBehavior
+    }
   }, [])
 
   const toggleMenu = () => {
@@ -171,11 +192,11 @@ export function SoundProLanding() {
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-[#f5f0e8] via-[#e1e1e1] to-muted/20" style={{ scrollBehavior: 'smooth', backgroundColor: '#f5f0e8' }}>
       {/* Header */}
       <motion.header
-        initial={{ y: -100 }}
+        initial={false}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         className={`sticky top-0 z-50 w-full border-b bg-background backdrop-blur supports-[backdrop-filter]:bg-background/60 ${
-          scrollY > 50 ? "shadow-md" : ""
+          isScrolled ? "shadow-md" : ""
         }`}
       >
         <div className="w-full px-4 md:px-6 lg:px-8 flex h-16 items-center justify-between max-w-full">
@@ -205,9 +226,17 @@ export function SoundProLanding() {
               Richiedi analisi gratuita
             </Button>
           </div>
-          <button className="flex md:hidden" onClick={toggleMenu}>
-            <Menu className="h-6 w-6" />
-            <span className="sr-only">Toggle menu</span>
+          <button className="flex md:hidden items-center justify-center h-10 w-10" onClick={toggleMenu} aria-label={isMenuOpen ? "Chiudi menu" : "Apri menu"}>
+            {isMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <span className="inline-flex flex-col gap-1">
+                <span className="block h-0.5 w-7 rounded-full bg-foreground" />
+                <span className="block h-0.5 w-7 rounded-full bg-foreground" />
+                <span className="block h-0.5 w-7 rounded-full bg-foreground" />
+              </span>
+            )}
+            <span className="sr-only">{isMenuOpen ? "Chiudi menu" : "Apri menu"}</span>
           </button>
         </div>
       </motion.header>
@@ -226,14 +255,18 @@ export function SoundProLanding() {
             animate="visible"
             className="w-full px-4 md:px-6 lg:px-8 grid gap-3 pb-8 pt-6"
           >
-            {["Perché", "Metodo", "Case", "Contatti"].map((item, index) => (
+            {mobileNavItems.map((item, index) => (
               <motion.div key={index} variants={itemFadeIn}>
                 <Link
-                  href={`#${item.toLowerCase()}`}
+                  href={`#${item.id}`}
                   className="flex items-center justify-between rounded-3xl px-3 py-2 text-lg font-medium hover:bg-accent"
-                  onClick={toggleMenu}
+                  onClick={(event) => {
+                    event.preventDefault()
+                    document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" })
+                    setIsMenuOpen(false)
+                  }}
                 >
-                  {item}
+                  {item.label}
                   <ChevronRight className="h-4 w-4" />
                 </Link>
               </motion.div>
@@ -246,9 +279,9 @@ export function SoundProLanding() {
         {/* Hero Section */}
         <section className="w-full min-h-screen flex items-center overflow-hidden relative">
           <div className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full">
-            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center max-w-7xl mx-auto">
+            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center max-w-[92rem] mx-auto">
               <motion.div
-                initial="hidden"
+                initial={false}
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={slideInLeft}
@@ -336,7 +369,7 @@ export function SoundProLanding() {
                 </motion.div>
               </motion.div>
                 <motion.div
-                  initial={{ opacity: 0, x: 100 }}
+                  initial={false}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                   className="flex items-center justify-center h-full"
@@ -350,17 +383,25 @@ export function SoundProLanding() {
                   src="/hero-product.jpg"
                   alt="Pannello acustico personalizzato"
                   fill
+                  priority
+                  sizes="(min-width: 1280px) 48vw, (min-width: 1024px) 50vw, 100vw"
                   className="object-cover rounded-3xl"
                 />
                 </motion.div>
               </motion.div>
             </div>
           </div>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 md:h-52 bg-gradient-to-b from-transparent via-[#f8fafc]/70 to-[#f8fafc]" />
         </section>
 
 
         {/* Method Section */}
-        <section id="method" className="w-full py-8 md:py-16 lg:py-24 bg-gray-100 relative overflow-hidden shadow-inner transform-gpu" style={{ transform: 'rotateX(-2deg)', perspective: '1000px' }}>
+        <section
+          id="method"
+          className="w-full py-10 md:py-20 lg:py-24 bg-gradient-to-b from-[#f8fafc] via-white to-[#f1f5f9] relative overflow-hidden"
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 md:h-28 bg-gradient-to-b from-[#f8fafc]/85 via-[#f8fafc]/35 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-28 bg-gradient-to-t from-[#edf3f8]/90 via-[#edf3f8]/35 to-transparent" />
           <div className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full">
             <motion.div
             variants={staggerContainer}
@@ -374,7 +415,7 @@ export function SoundProLanding() {
               className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
             >
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Come lavoriamo</h2>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+              <p className="mx-auto max-w-[760px] lg:max-w-[900px] text-muted-foreground md:text-xl">
                 Un processo trasparente e scientifico in 4 step
               </p>
             </motion.div>
@@ -384,7 +425,7 @@ export function SoundProLanding() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-4 relative max-w-6xl mx-auto"
+              className="grid gap-6 md:grid-cols-4 relative max-w-[90rem] mx-auto"
             >
               {/* Animated connecting line */}
               <motion.div
@@ -436,12 +477,6 @@ export function SoundProLanding() {
                   </motion.div>
                   <h3 className="text-xl font-bold mb-2 mt-2">{item.title}</h3>
                   <p className="text-muted-foreground text-sm">{item.description}</p>
-                  <motion.div
-                    className="absolute bottom-0 left-0 h-1 bg-primary rounded-full"
-                    initial={{ width: "0%" }}
-                    whileInView={{ width: "100%" }}
-                    transition={{ delay: index * 0.15 + 0.3, duration: 0.8 }}
-                  />
                 </motion.div>
               ))}
             </motion.div>
@@ -451,11 +486,17 @@ export function SoundProLanding() {
 
         {/* Why Section */}
         {ENABLE_SECTION_DIVIDERS && (
-          <div className="w-full flex justify-center">
-            <div className="w-full max-w-7xl h-1 sm:h-1.5 rounded-full bg-gradient-to-r from-cyan-400/60 via-white to-cyan-400/60 opacity-90 shadow-sm animate-pulse my-6 mx-4" />
+          <div className="relative h-12 md:h-16 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#f1f5f9] via-[#eef3f8] to-[#edf3f8]" />
+            <div className="absolute inset-x-[10%] top-1/2 h-8 -translate-y-1/2 rounded-full bg-white/35 blur-2xl" />
           </div>
         )}
-        <section id="why" className="w-full py-8 md:py-16 lg:py-24 bg-[url('/textures/wood-light.png')] bg-cover bg-opacity-20 relative overflow-hidden shadow-2xl transform-gpu" style={{ transform: 'rotateX(2deg)', perspective: '1000px' }}>
+        <section
+          id="why"
+          className="w-full py-10 md:py-20 lg:py-24 bg-gradient-to-b from-[#edf3f8] via-[#f6f8fb] to-[#eef2f7] relative overflow-hidden"
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 md:h-28 bg-gradient-to-b from-[#edf3f8]/90 via-[#edf3f8]/35 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-28 bg-gradient-to-t from-[#e9eff6]/90 via-[#e9eff6]/35 to-transparent" />
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -467,7 +508,7 @@ export function SoundProLanding() {
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                 Perché i pannelli standard non risolvono il tuo problema
               </h2>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+              <p className="mx-auto max-w-[760px] lg:max-w-[900px] text-muted-foreground md:text-xl">
                 Comprare pannelli acustici online è facile. Risolvere davvero i problemi di suono del tuo spazio è
                 un&apos;altra cosa.
               </p>
@@ -478,7 +519,7 @@ export function SoundProLanding() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto"
+              className="grid gap-6 md:grid-cols-3 max-w-[88rem] mx-auto"
             >
               {[
                 {
@@ -525,8 +566,20 @@ export function SoundProLanding() {
           </motion.div>
         </section>
 
+        {ENABLE_SECTION_DIVIDERS && (
+          <div className="relative h-12 md:h-16 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#eef2f7] via-[#ebf0f6] to-[#e9eff6]" />
+            <div className="absolute inset-x-[10%] top-1/2 h-8 -translate-y-1/2 rounded-full bg-white/30 blur-2xl" />
+          </div>
+        )}
+
         {/* Cases Section */}
-        <section id="cases" className="w-full py-12 md:py-24 lg:py-32 bg-muted/20 relative overflow-hidden">
+        <section
+          id="cases"
+          className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-[#e9eff6] via-[#f3f6fa] to-[#f8fafc] relative overflow-hidden"
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-20 md:h-24 bg-gradient-to-b from-[#e9eff6]/85 via-[#e9eff6]/30 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 md:h-24 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/35 to-transparent" />
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -539,7 +592,7 @@ export function SoundProLanding() {
               className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
             >
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Spazi trasformati</h2>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+              <p className="mx-auto max-w-[760px] lg:max-w-[900px] text-muted-foreground md:text-xl">
                 Vedi come abbiamo trasformato gli ambienti dei nostri clienti
               </p>
             </motion.div>
@@ -549,7 +602,7 @@ export function SoundProLanding() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto"
+              className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-[90rem] mx-auto"
             >
               {[
                 {
@@ -598,7 +651,8 @@ export function SoundProLanding() {
         </section>
 
         {/* CTA Final Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 relative">
+        <section className="w-full py-14 md:py-28 lg:py-36 relative bg-background">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 md:h-28 bg-gradient-to-b from-[#f8fafc] via-[#f8fafc]/35 to-transparent" />
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -609,7 +663,7 @@ export function SoundProLanding() {
             <motion.div
               whileHover={{ boxShadow: "0 20px 60px rgba(107, 163, 212, 0.2)" }}
               transition={{ duration: 0.3 }}
-              className="border border-muted rounded-3xl bg-muted/20 py-16 px-6 md:px-12 relative overflow-hidden"
+              className="border border-muted rounded-3xl bg-background py-16 px-6 md:px-12 relative overflow-hidden"
             >
               <div className="flex flex-col items-center justify-center space-y-4 text-center relative z-10">
                 <motion.h2
@@ -624,7 +678,7 @@ export function SoundProLanding() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
-                  className="mx-auto max-w-[700px] text-muted-foreground md:text-xl"
+                  className="mx-auto max-w-[760px] lg:max-w-[900px] text-muted-foreground md:text-xl"
                 >
                   Richiedi l&apos;analisi acustica gratuita. Ti contatteremo entro 24 ore.
                 </motion.p>
@@ -650,7 +704,7 @@ export function SoundProLanding() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="w-full py-12 md:py-24 lg:py-32 relative overflow-hidden">
+        <section id="contact" className="w-full py-12 md:py-24 lg:py-32 relative overflow-hidden bg-gradient-to-b from-background to-[#f8fafc]">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -658,7 +712,7 @@ export function SoundProLanding() {
             variants={fadeIn}
             className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
           >
-            <div className="grid items-center gap-8 lg:grid-cols-2 max-w-5xl mx-auto">
+            <div className="grid items-center gap-8 lg:grid-cols-2 max-w-[88rem] mx-auto">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -716,24 +770,46 @@ export function SoundProLanding() {
                       <h3 className="mb-2 text-xl font-bold">Contattaci</h3>
                       <div className="grid gap-3 sm:grid-cols-2">
                         <motion.div whileHover={{ scale: 1.02 }}>
-                          <Input name="name" placeholder="Nome" required className="rounded-2xl" />
+                          <Input
+                            name="name"
+                            placeholder="Nome"
+                            required
+                            className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
+                          />
                         </motion.div>
                         <motion.div whileHover={{ scale: 1.02 }}>
-                          <Input name="email" type="email" placeholder="Email" required className="rounded-2xl" />
+                          <Input
+                            name="email"
+                            type="email"
+                            placeholder="Email"
+                            required
+                            className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
+                          />
                         </motion.div>
                       </div>
                       <motion.div whileHover={{ scale: 1.02 }}>
                         <Input name="phone" type="tel" placeholder="Telefono (opzionale)" className="rounded-2xl" />
                       </motion.div>
-                      <motion.div whileHover={{ scale: 1.02 }}>
-                        <select name="service" className="w-full rounded-2xl border border-input bg-background px-3 py-2 text-sm" required>
+                      <motion.div whileHover={{ scale: 1.02 }} className="relative">
+                        <select
+                          name="service"
+                          className="w-full appearance-none rounded-2xl border border-[#d8dde4] bg-[#f3f5f7] px-3 py-2 pr-10 text-sm text-foreground transition-colors focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                          required
+                        >
                           <option value="">Seleziona servizio</option>
-                          <option>Progetto acustico (sopralluogo + misurazione) - Gratuito</option>
+                          <option>Progetto acustico (sopralluogo + misurazione)</option>
                           <option>Prodotti su misura (pannelli acustici artigianali)</option>
                         </select>
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
                       </motion.div>
                       <motion.div whileHover={{ scale: 1.02 }}>
-                        <Textarea name="message" placeholder="Descrivi il tuo progetto" required className="rounded-2xl" rows={4} />
+                        <Textarea
+                          name="message"
+                          placeholder="Descrivi il tuo progetto"
+                          required
+                          className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
+                          rows={4}
+                        />
                       </motion.div>
                       <motion.div whileHover={{ scale: 1.02 }}>
                         <Input name="roomSize" type="text" placeholder="Misura stanza (es: 5m x 4m x 3m)" className="rounded-2xl" />
@@ -757,7 +833,7 @@ export function SoundProLanding() {
                       </motion.div>
                       <label className="flex items-center gap-2">
                         <input name="privacyAccepted" type="checkbox" required />
-                        <span className="text-sm">Accetto la privacy</span>
+                        <span className="text-sm underline underline-offset-2">Accetto la privacy</span>
                       </label>
                       <motion.div
                         whileHover={{ scale: 1.05 }}
@@ -825,7 +901,7 @@ export function SoundProLanding() {
       {/* Footer */}
       <footer className="w-full border-t bg-background">
         <div className="w-full px-4 md:px-6 lg:px-8 py-8 max-w-full">
-          <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
+          <div className="grid gap-8 md:grid-cols-3 max-w-[90rem] mx-auto">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-8 w-auto" />
@@ -876,7 +952,7 @@ export function SoundProLanding() {
               </p>
             </div>
           </div>
-          <div className="border-t mt-8 pt-8 flex flex-col items-center justify-between gap-4 md:flex-row max-w-6xl mx-auto">
+          <div className="border-t mt-8 pt-8 flex flex-col items-center justify-between gap-4 md:flex-row max-w-[90rem] mx-auto">
             <p className="text-xs text-muted-foreground">
               &copy; {new Date().getFullYear()} SoundPro Acoustic. All rights reserved.
             </p>
