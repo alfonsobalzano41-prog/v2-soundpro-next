@@ -223,7 +223,7 @@ export function SoundProLanding() {
               className="rounded-full hover:scale-105 transition-transform duration-150"
               onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
             >
-              Richiedi analisi gratuita
+              Richiedi i nostri servizi
             </Button>
           </div>
           <button className="flex md:hidden items-center justify-center h-10 w-10" onClick={toggleMenu} aria-label={isMenuOpen ? "Chiudi menu" : "Apri menu"}>
@@ -346,7 +346,7 @@ export function SoundProLanding() {
                       className="rounded-full group"
                       onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                     >
-                      Richiedi analisi gratuita
+                      Richiedi i nostri servizi
                       <motion.span
                         initial={{ x: 0 }}
                         whileHover={{ x: 5 }}
@@ -719,7 +719,7 @@ export function SoundProLanding() {
                 transition={{ duration: 0.6 }}
                 className="space-y-3"
               >
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Richiedi analisi gratuita</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Richiedi i nostri servizi</h2>
                 <p className="text-muted-foreground md:text-xl">
                   Contattaci per iniziare a trasformare il tuo spazio acustico. Ti risponderemo entro 24 ore.
                 </p>
