@@ -11,7 +11,6 @@ import {
   ChevronRight,
   Mail,
   MapPin,
-  Phone,
   Instagram,
   Facebook,
   Sparkles,

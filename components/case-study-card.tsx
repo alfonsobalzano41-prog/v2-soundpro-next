@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Image from "next/image"
 import { AnimatePresence, motion } from "framer-motion"
 
@@ -19,6 +19,7 @@ type CaseStudyCardProps = {
 }
 
 const VISIBLE_THUMBNAILS = 3
+const CASE_GALLERY_PRELOAD_AHEAD = 2
 
 export function CaseStudyCard({ item, enableGallery = false }: CaseStudyCardProps) {
   const galleryImages = useMemo(() => item.images, [item.images])
@@ -34,6 +35,22 @@ export function CaseStudyCard({ item, enableGallery = false }: CaseStudyCardProp
         return { image: galleryImages[imageIndex], imageIndex }
       })
     : []
+
+  useEffect(() => {
+    if (!galleryEnabled || galleryImages.length === 0) return
+
+    // Preload active + upcoming gallery images for instant thumbnail switch.
+    const preloadIndexes = Array.from({ length: Math.min(CASE_GALLERY_PRELOAD_AHEAD + 1, galleryImages.length) }, (_, offset) => {
+      return (safeIndex + offset) % galleryImages.length
+    })
+
+    preloadIndexes.forEach((index) => {
+      const src = galleryImages[index]
+      if (!src) return
+      const img = new window.Image()
+      img.src = src
+    })
+  }, [galleryEnabled, galleryImages, safeIndex])
 
   return (
     <div className="relative z-10">

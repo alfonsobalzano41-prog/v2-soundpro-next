@@ -19,6 +19,7 @@ const HERO_SHOWCASE_CONFIG = {
   rotationIntervalMs: 4500,
   floatDurationSeconds: 6.8,
   crossfadeSeconds: 0.75,
+  preloadAhead: 2,
   baseScale: 1,
   activeScale: 1.035,
   hoverScale: 1.018,
@@ -73,6 +74,22 @@ export function HeroWorkShowcaseCard({ enabled = true }: HeroWorkShowcaseCardPro
 
     return () => window.clearInterval(timer)
   }, [enabled, isHovered])
+
+  useEffect(() => {
+    if (!enabled || HERO_SHOWCASE_IMAGES.length === 0) return
+
+    // Progressive preload: current + next slides to keep crossfade smooth.
+    const preloadIndexes = Array.from({ length: Math.min(HERO_SHOWCASE_CONFIG.preloadAhead + 1, HERO_SHOWCASE_IMAGES.length) }, (_, offset) => {
+      return (activeIndex + offset) % HERO_SHOWCASE_IMAGES.length
+    })
+
+    preloadIndexes.forEach((index) => {
+      const src = HERO_SHOWCASE_IMAGES[index]?.src
+      if (!src) return
+      const img = new window.Image()
+      img.src = src
+    })
+  }, [activeIndex, enabled])
 
   if (!enabled || HERO_SHOWCASE_IMAGES.length === 0) return null
 
