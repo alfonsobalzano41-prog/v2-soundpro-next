@@ -636,10 +636,10 @@ export function SoundProLanding() {
         {/* Cases Section */}
         <section
           id="cases"
-          className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-[#e9eff6] via-[#f3f6fa] to-[#f8fafc] relative overflow-hidden"
+          className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-[#e9eff6] via-[#f3f6fa] to-white relative overflow-hidden"
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-20 md:h-24 bg-gradient-to-b from-[#e9eff6]/85 via-[#e9eff6]/30 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 md:h-24 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/35 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36 bg-gradient-to-b from-white via-[#f7f3ed] to-[#f5f0e8]" />
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -680,8 +680,7 @@ export function SoundProLanding() {
         </section>
 
         {/* CTA Final Section */}
-        <section className="w-full py-14 md:py-28 lg:py-36 relative bg-background">
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 md:h-28 bg-gradient-to-b from-[#f8fafc] via-[#f8fafc]/35 to-transparent" />
+        <section className="w-full py-14 md:py-28 lg:py-36 relative bg-[#f5f0e8]">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -733,7 +732,7 @@ export function SoundProLanding() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="w-full py-12 md:py-24 lg:py-32 relative overflow-hidden bg-gradient-to-b from-background to-[#f8fafc]">
+        <section id="contact" className="w-full py-12 md:py-24 lg:py-32 relative overflow-hidden bg-[#f5f0e8]">
           <motion.div
             initial="hidden"
             whileInView="visible"
