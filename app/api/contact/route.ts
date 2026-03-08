@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     const roomSize = String(formData.get("roomSize") || "").trim()
     const privacyAccepted = formData.get("privacyAccepted")
 
-    if (!name || !email || !service || !message || !privacyAccepted) {
+    if (!name || !email || !service || !privacyAccepted) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
       `Misura stanza: ${roomSize || "-"}`,
       "",
       "Messaggio:",
-      message,
+      message || "-",
       "",
       `Allegati: ${attachments.length}`,
     ].join("\n")
@@ -82,7 +82,7 @@ export async function POST(request: Request) {
     const safePhone = escapeHtml(phone || "-")
     const safeService = escapeHtml(service)
     const safeRoomSize = escapeHtml(roomSize || "-")
-    const safeMessage = escapeHtml(message).replace(/\n/g, "<br/>")
+    const safeMessage = escapeHtml(message || "-").replace(/\n/g, "<br/>")
 
     const htmlBody = `
       <h2>Nuova richiesta dal form SoundPro</h2>

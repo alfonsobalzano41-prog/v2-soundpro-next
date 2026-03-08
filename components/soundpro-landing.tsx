@@ -20,6 +20,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { HeroWorkShowcaseCard } from "@/components/hero-work-showcase-card"
+import { CaseStudyCard, type CaseStudy } from "@/components/case-study-card"
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -106,6 +108,64 @@ const mobileNavItems = [
   { label: "Contatti", id: "contact" },
 ]
 
+// Case study data model: each item is ready to receive future image galleries.
+const caseStudies: CaseStudy[] = [
+  {
+    id: "case1",
+    imageBasePath: "/cases/case1",
+    images: [
+      "/cases/case1/case1-1.jpg",
+      "/cases/case1/case1-2.jpg",
+      "/cases/case1/case1-3.jpg",
+      "/cases/case1/case1-4.jpg",
+      "/cases/case1/case1-5.jpg",
+    ],
+    problem: "Rimbombo eccessivo, suono confuso",
+    solution: "8 pannelli acustici su misura, posizionamento strategico",
+    result: "Chiarezza sui transienti, suono definito",
+  },
+  {
+    id: "case2",
+    imageBasePath: "/cases/case2",
+    images: [
+      "/cases/case2/case2-1.jpeg",
+      "/cases/case2/case2-2.jpeg",
+      "/cases/case2/case2-3.jpg",
+      "/cases/case2/case2-4.jpg",
+    ],
+    problem: "Riverbero eccessivo",
+    solution: "6 pannelli su misura",
+    result: "Migliore definizione sonora",
+  },
+  {
+    id: "case3",
+    imageBasePath: "/cases/case3",
+    images: [
+      "/cases/case3/case3-1.jpeg",
+      "/cases/case3/case3-2.jpeg",
+      "/cases/case3/case3-3.jpeg",
+      "/cases/case3/case3-4.jpeg",
+      "/cases/case3/case3-5.jpeg",
+    ],
+    problem: "Problemi di fase",
+    solution: "Pannelli dimensionati ad-hoc",
+    result: "Immagine stereofonica più coerente",
+  },
+  {
+    id: "case4",
+    imageBasePath: "/cases/case4",
+    images: [
+      "/cases/case4/case4-1.jpg",
+      "/cases/case4/case4-2.jpg",
+      "/cases/case4/case4-3.jpg",
+      "/cases/case4/case4-4.jpg",
+    ],
+    problem: "Confusione nei transienti",
+    solution: "Mix di diffusori e assorbitori su misura",
+    result: "Dettaglio e precisione",
+  },
+]
+
 export function SoundProLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -115,6 +175,8 @@ export function SoundProLanding() {
   const [selectedFilesCount, setSelectedFilesCount] = useState(0)
   // Feature flags
   const ENABLE_SECTION_DIVIDERS = true
+  const ENABLE_HERO_WORK_SHOWCASE = true // reversible: set false to restore single static hero image
+  const ENABLE_CASES_VISUAL_GALLERY = true // reversible: set false to keep all case cards in static mode
   const USE_CUSTOM_PALETTE = true // toggle palette application
 
   // color palette (easy to override or disable)
@@ -376,17 +438,21 @@ export function SoundProLanding() {
               >
                 <motion.div
                   animate={floatingAnimation}
-                  className="relative w-full h-[420px] sm:h-[520px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-3xl flex items-center justify-center shadow-2xl"
+                  className="relative w-full h-[360px] sm:h-[460px] md:h-[560px] lg:h-auto lg:-mr-16 lg:w-[135%] xl:w-[140%] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[720px] overflow-hidden rounded-[40px] flex items-center justify-center shadow-2xl lg:ml-auto"
                 >
-                {/* Replace gradient with hero product image */}
-                <Image
-                  src="/hero-product.jpg"
-                  alt="Pannello acustico personalizzato"
-                  fill
-                  priority
-                  sizes="(min-width: 1280px) 48vw, (min-width: 1024px) 50vw, 100vw"
-                  className="object-cover rounded-3xl"
-                />
+                {/* Reversible Hero visual upgrade: auto-rotating showcase card */}
+                {ENABLE_HERO_WORK_SHOWCASE ? (
+                  <HeroWorkShowcaseCard />
+                ) : (
+                  <Image
+                    src="/hero-product.jpg"
+                    alt="Pannello acustico personalizzato"
+                    fill
+                    priority
+                    sizes="(min-width: 1280px) 48vw, (min-width: 1024px) 50vw, 100vw"
+                    className="object-cover rounded-3xl"
+                  />
+                )}
                 </motion.div>
               </motion.div>
             </div>
@@ -416,7 +482,7 @@ export function SoundProLanding() {
             >
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Come lavoriamo</h2>
               <p className="mx-auto max-w-[760px] lg:max-w-[900px] text-muted-foreground md:text-xl">
-                Un processo trasparente e scientifico in 4 step
+                Un processo trasparente e scientifico in 3 step
               </p>
             </motion.div>
 
@@ -425,7 +491,7 @@ export function SoundProLanding() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-4 relative max-w-[90rem] mx-auto"
+              className="grid gap-6 md:grid-cols-3 relative max-w-[90rem] mx-auto"
             >
               {/* Animated connecting line */}
               <motion.div
@@ -439,23 +505,18 @@ export function SoundProLanding() {
               {[
                 {
                   step: "1",
-                  title: "Sopralluogo",
-                  description: "Visitiamo il tuo spazio. Ascoltiamo, osserviamo, capiamo il tuo problema specifico.",
+                  title: "Sopralluogo e Misurazione",
+                  description:
+                    "Visitiamo il tuo spazio e rileviamo con strumenti professionali frequenze, riverbero e problemi di fase, per partire da dati reali.",
                 },
                 {
                   step: "2",
-                  title: "Misurazione",
+                  title: "Progettazione",
                   description:
-                    "Usiamo strumenti professionali per misurare frequenze, riverbero, problemi di fase. Dati reali.",
+                    "Progettiamo pannelli acustici su misura per il TUO spazio, con ogni dettaglio calcolato e supportato da un render grafico avanzato.",
                 },
                 {
                   step: "3",
-                  title: "Progettazione",
-                  description:
-                    "Progettiamo pannelli acustici su misura per il TUO spazio. Tutto calcolato nei dettagli.",
-                },
-                {
-                  step: "4",
                   title: "Realizzazione Artigianale",
                   description: "Costruiamo ogni pannello a mano. Installazione professionale inclusa.",
                 },
@@ -604,46 +665,15 @@ export function SoundProLanding() {
               viewport={{ once: true }}
               className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-[90rem] mx-auto"
             >
-              {[
-                {
-                  problem: "Rimbombo eccessivo, suono confuso",
-                  solution: "8 pannelli acustici su misura, posizionamento strategico",
-                  result: "Chiarezza sui transienti, suono definito",
-                },
-                {
-                  problem: "Riverbero eccessivo",
-                  solution: "6 pannelli su misura",
-                  result: "Migliore definizione sonora",
-                },
-                {
-                  problem: "Problemi di fase",
-                  solution: "Pannelli dimensionati ad-hoc",
-                  result: "Immagine stereofonica più coerente",
-                },
-                {
-                  problem: "Confusione nei transienti",
-                  solution: "Mix di diffusori e assorbitori su misura",
-                  result: "Dettaglio e precisione",
-                },
-              ].map((item, index) => (
+              {caseStudies.map((item) => (
                 <motion.div
-                  key={index}
+                  key={item.id}
                   variants={itemFadeIn}
                   whileHover={{ y: -12, scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   className="rounded-3xl border bg-background p-6 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 group relative overflow-hidden"
                 >
-                  <div className="relative z-10">
-                    <div className="h-32 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl mb-4 flex items-center justify-center text-muted-foreground group-hover:from-primary/30 group-hover:to-primary/10 transition-all duration-300">
-                      Foto caso studio
-                    </div>
-                    <p className="text-sm font-semibold mb-2 text-primary">Problema</p>
-                    <p className="text-sm mb-3">{item.problem}</p>
-                    <p className="text-sm font-semibold mb-2 text-primary">Soluzione</p>
-                    <p className="text-sm mb-3">{item.solution}</p>
-                    <p className="text-sm font-semibold mb-2 text-primary">Risultato</p>
-                    <p className="text-sm text-muted-foreground">{item.result}</p>
-                  </div>
+                  <CaseStudyCard item={item} enableGallery={ENABLE_CASES_VISUAL_GALLERY} />
                 </motion.div>
               ))}
             </motion.div>
@@ -727,7 +757,6 @@ export function SoundProLanding() {
                   {[
                     { icon: MapPin, label: "Ubicazione", text: "Ercolano (NA), Italia" },
                     { icon: Mail, label: "Email", text: "info@soundproacoustic.com" },
-                    { icon: Phone, label: "Telefono", text: "+39 (081) 123-4567" },
                   ].map((item, index) => (
                     <motion.div
                       key={index}
@@ -806,7 +835,6 @@ export function SoundProLanding() {
                         <Textarea
                           name="message"
                           placeholder="Descrivi il tuo progetto"
-                          required
                           className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
                           rows={4}
                         />
@@ -947,8 +975,6 @@ export function SoundProLanding() {
                 Ercolano (NA), Italia
                 <br />
                 info@soundproacoustic.com
-                <br />
-                +39 (081) 123-4567
               </p>
             </div>
           </div>
