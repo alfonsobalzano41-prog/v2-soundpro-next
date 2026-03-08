@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Image from "next/image"
-import { AnimatePresence, motion } from "framer-motion"
 
 export type CaseStudy = {
   id: string
@@ -55,27 +54,16 @@ export function CaseStudyCard({ item, enableGallery = false }: CaseStudyCardProp
   return (
     <div className="relative z-10">
       <div className="mb-4 space-y-3">
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5">
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 transform-gpu [backface-visibility:hidden] [transform:translateZ(0)]">
           {activeImage ? (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeImage}
-                initial={{ opacity: 0.35, scale: 1.015 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0.35, scale: 1.01 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src={activeImage}
-                  alt={`Case ${item.id} - immagine ${safeIndex + 1}`}
-                  fill
-                  sizes="(min-width: 1280px) 26vw, (min-width: 768px) 42vw, 100vw"
-                  className="object-cover"
-                  priority={item.id === "case1" && safeIndex === 0}
-                />
-              </motion.div>
-            </AnimatePresence>
+            <Image
+              src={activeImage}
+              alt={`Case ${item.id} - immagine ${safeIndex + 1}`}
+              fill
+              sizes="(min-width: 1280px) 26vw, (min-width: 768px) 42vw, 100vw"
+                  className="object-cover [backface-visibility:hidden] [transform:translateZ(0)]"
+              priority={safeIndex === 0}
+            />
           ) : (
             <div className="flex h-full items-center justify-center px-3 text-center text-xs text-muted-foreground sm:text-sm">
               Area immagine pronta ({item.imageBasePath})
@@ -107,7 +95,7 @@ export function CaseStudyCard({ item, enableGallery = false }: CaseStudyCardProp
                     alt={`Thumbnail ${imageIndex + 1} case ${item.id}`}
                     fill
                     sizes="(min-width: 1280px) 6vw, (min-width: 768px) 10vw, 22vw"
-                    className="object-cover"
+                    className="object-cover [backface-visibility:hidden] [transform:translateZ(0)]"
                     loading={imageIndex === 0 ? "eager" : "lazy"}
                   />
                 </button>

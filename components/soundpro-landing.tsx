@@ -87,6 +87,14 @@ const itemFadeIn = {
   },
 }
 
+const caseCardFadeIn = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.45 },
+  },
+}
+
 const socialLinks = [
   {
     href: "https://www.instagram.com/soundproacoustic/",
@@ -129,7 +137,7 @@ const caseStudies: CaseStudy[] = [
     images: [
       "/cases/case2/case2-1.jpeg",
       "/cases/case2/case2-2.jpeg",
-      "/cases/case2/case2-3.jpg",
+      "/cases/case2/case2-3.jpeg",
       "/cases/case2/case2-4.jpg",
     ],
     problem: "Riverbero eccessivo",
@@ -667,10 +675,10 @@ export function SoundProLanding() {
               {caseStudies.map((item) => (
                 <motion.div
                   key={item.id}
-                  variants={itemFadeIn}
+                  variants={caseCardFadeIn}
                   whileHover={{ y: -12, scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                  className="rounded-3xl border bg-background p-6 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 group relative overflow-hidden"
+                  className="rounded-3xl border bg-background p-6 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 group relative overflow-hidden transform-gpu [backface-visibility:hidden] [transform:translateZ(0)]"
                 >
                   <CaseStudyCard item={item} enableGallery={ENABLE_CASES_VISUAL_GALLERY} />
                 </motion.div>
