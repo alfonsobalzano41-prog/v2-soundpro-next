@@ -29,7 +29,7 @@ const HERO_SHOWCASE_CONFIG = {
 // Ordered to alternate cool/warm scenes for a smoother visual rhythm.
 const HERO_SHOWCASE_IMAGES: HeroShowcaseImage[] = [
   {
-    src: "/Campanile-18.JPEG",
+    src: "/hero-product.jpg",
     alt: "Studio trattato SoundPro con pannelli acustici su misura",
     objectPosition: "center center",
   },

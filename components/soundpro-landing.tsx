@@ -87,14 +87,6 @@ const itemFadeIn = {
   },
 }
 
-const caseCardFadeIn = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.45 },
-  },
-}
-
 const socialLinks = [
   {
     href: "https://www.instagram.com/soundproacoustic/",
@@ -493,13 +485,7 @@ export function SoundProLanding() {
               </p>
             </motion.div>
 
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-3 relative max-w-[90rem] mx-auto"
-            >
+            <div className="grid gap-6 md:grid-cols-3 relative max-w-[90rem] mx-auto">
               {/* Animated connecting line */}
               <motion.div
                 initial={{ scaleX: 0 }}
@@ -530,24 +516,18 @@ export function SoundProLanding() {
               ].map((item, index) => (
                 <motion.div
                   key={index}
-                  variants={itemFadeIn}
                   whileHover={{ y: -8 }}
                   transition={{ type: "spring", stiffness: 300, damping: 10 }}
                   className="relative rounded-3xl border bg-background p-6 shadow-sm group hover:shadow-lg hover:border-primary/50 transition-all"
                 >
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    transition={{ delay: index * 0.15, type: "spring", stiffness: 300 }}
-                    className="absolute -top-6 -left-6 h-12 w-12 rounded-full bg-gradient-to-br from-primary to-blue-500 text-white flex items-center justify-center font-bold shadow-lg group-hover:shadow-xl transition-shadow"
-                  >
+                  <div className="absolute -top-6 -left-6 h-12 w-12 rounded-full bg-gradient-to-br from-primary to-blue-500 text-white flex items-center justify-center font-bold shadow-lg group-hover:shadow-xl transition-shadow">
                     {item.step}
-                  </motion.div>
+                  </div>
                   <h3 className="text-xl font-bold mb-2 mt-2">{item.title}</h3>
                   <p className="text-muted-foreground text-sm">{item.description}</p>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           </motion.div>
           </div>
         </section>
@@ -665,25 +645,18 @@ export function SoundProLanding() {
               </p>
             </motion.div>
 
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-[90rem] mx-auto"
-            >
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-[90rem] xl:max-w-[104rem] 2xl:max-w-[112rem] mx-auto">
               {caseStudies.map((item) => (
                 <motion.div
                   key={item.id}
-                  variants={caseCardFadeIn}
                   whileHover={{ y: -12, scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                  className="rounded-3xl border bg-background p-6 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 group relative overflow-hidden transform-gpu [backface-visibility:hidden] [transform:translateZ(0)]"
+                  className="rounded-3xl border bg-background p-6 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-300 group relative overflow-hidden"
                 >
                   <CaseStudyCard item={item} enableGallery={ENABLE_CASES_VISUAL_GALLERY} />
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           </motion.div>
         </section>
 
