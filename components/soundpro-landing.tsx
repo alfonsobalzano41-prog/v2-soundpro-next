@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { AnimatePresence, motion, easeInOut } from "framer-motion"  // ✓ Aggiungi easeInOut qui
+import { AnimatePresence, motion, easeInOut } from "framer-motion"
 import {
   X,
   ArrowRight,
@@ -13,8 +13,6 @@ import {
   MapPin,
   Instagram,
   Facebook,
-  Sparkles,
-  Zap,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -37,24 +35,6 @@ const slideInLeft = {
     opacity: 1,
     x: 0,
     transition: { duration: 0.8 },
-  },
-}
-
-const slideInRight = {
-  hidden: { opacity: 0, x: 50 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.8 },
-  },
-}
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.6 },
   },
 }
 
@@ -103,9 +83,40 @@ const socialLinks = [
 const mobileNavItems = [
   { label: "Perché", id: "why" },
   { label: "Metodo", id: "method" },
-  { label: "Case", id: "cases" },
+  { label: "Lavori", id: "cases" },
   { label: "Contatti", id: "contact" },
 ]
+
+const ANCHOR_SCROLL_OFFSET = 100
+
+const getAnchorOffset = () => {
+  const headerHeight = document.querySelector("header")?.getBoundingClientRect().height ?? 0
+  return Math.max(ANCHOR_SCROLL_OFFSET, Math.round(headerHeight + 32))
+}
+
+const scrollToSection = (sectionId: string, options: { updateHash?: boolean } = {}) => {
+  if (typeof window === "undefined") return
+
+  const normalizedId = sectionId.replace(/^#/, "")
+  const target = document.getElementById(normalizedId)
+
+  if (!target) return
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  const top = Math.max(target.getBoundingClientRect().top + window.scrollY - getAnchorOffset(), 0)
+
+  window.scrollTo({
+    top,
+    behavior: prefersReducedMotion ? "auto" : "smooth",
+  })
+
+  if (options.updateHash === false) return
+
+  const nextHash = `#${normalizedId}`
+  if (window.location.hash !== nextHash) {
+    window.history.pushState(null, "", nextHash)
+  }
+}
 
 // Case study data model: each item is ready to receive future image galleries.
 const caseStudies: CaseStudy[] = [
@@ -176,25 +187,9 @@ export function SoundProLanding() {
   const ENABLE_SECTION_DIVIDERS = true
   const ENABLE_HERO_WORK_SHOWCASE = true // reversible: set false to restore single static hero image
   const ENABLE_CASES_VISUAL_GALLERY = true // reversible: set false to keep all case cards in static mode
-  const USE_CUSTOM_PALETTE = true // toggle palette application
-
-  // color palette (easy to override or disable)
-  const palette = {
-    primary: "#D4A574",      // rovere chiaro
-    primaryAlt: "#A0845C",   // rovere profondo
-    secondary: "#6B7280",    // grigio neutro
-    accent: "#5B9FBD",       // celeste soft
-    accentAlt: "#7FB3D5",    // celeste chiaro
-    bgPrimary: "#FFFFFF",    // bianco puro
-    bgSecondary: "#F9FAFB",  // grigio ultra-light
-    textPrimary: "#1F2937",  // grigio scuro
-    textSecondary: "#9CA3AF",// grigio medio
-  }
 
   useEffect(() => {
     let rafId = 0
-    const root = document.documentElement
-    const previousScrollBehavior = root.style.scrollBehavior
 
     const handleScroll = () => {
       if (rafId) return
@@ -206,7 +201,6 @@ export function SoundProLanding() {
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true })
-    root.style.scrollBehavior = "smooth"
     handleScroll()
 
     return () => {
@@ -214,7 +208,28 @@ export function SoundProLanding() {
         window.cancelAnimationFrame(rafId)
       }
       window.removeEventListener("scroll", handleScroll)
-      root.style.scrollBehavior = previousScrollBehavior
+    }
+  }, [])
+
+  useEffect(() => {
+    let frameId = 0
+
+    const syncHashScroll = () => {
+      if (!window.location.hash) return
+
+      frameId = window.requestAnimationFrame(() => {
+        scrollToSection(window.location.hash, { updateHash: false })
+      })
+    }
+
+    syncHashScroll()
+    window.addEventListener("hashchange", syncHashScroll)
+
+    return () => {
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
+      window.removeEventListener("hashchange", syncHashScroll)
     }
   }, [])
 
@@ -250,7 +265,7 @@ export function SoundProLanding() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-[#f5f0e8] via-[#e1e1e1] to-muted/20" style={{ scrollBehavior: 'smooth', backgroundColor: '#f5f0e8' }}>
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-[#f5f0e8] via-[#e1e1e1] to-muted/20" style={{ backgroundColor: '#f5f0e8' }}>
       {/* Header */}
       <motion.header
         initial={false}
@@ -260,10 +275,17 @@ export function SoundProLanding() {
           isScrolled ? "shadow-md" : ""
         }`}
       >
-        <div className="w-full px-4 md:px-6 lg:px-8 flex h-16 items-center justify-between max-w-full">
+          <div className="w-full px-4 md:px-6 lg:px-8 flex h-16 items-center justify-between max-w-full">
             <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center space-x-3">
-              <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-16 md:h-20 w-auto" />
+              <Image
+                src="/soundpro-logo.png"
+                alt="SoundPro Acoustic"
+                width={260}
+                height={120}
+                priority
+                className="h-16 md:h-20 w-auto"
+              />
             </Link>
           </div>
           {/* services marquee center */}
@@ -282,7 +304,7 @@ export function SoundProLanding() {
             <Button
               size="sm"
               className="rounded-full hover:scale-105 transition-transform duration-150"
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => scrollToSection("contact", { updateHash: false })}
             >
               Richiedi i nostri servizi
             </Button>
@@ -323,7 +345,7 @@ export function SoundProLanding() {
                   className="flex items-center justify-between rounded-3xl px-3 py-2 text-lg font-medium hover:bg-accent"
                   onClick={(event) => {
                     event.preventDefault()
-                    document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" })
+                    scrollToSection(item.id)
                     setIsMenuOpen(false)
                   }}
                 >
@@ -349,27 +371,25 @@ export function SoundProLanding() {
                 className="flex flex-col justify-center space-y-4 py-10"
               >
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.1 }}
-                      className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-muted-foreground/80 sm:text-xs md:text-sm">
+                    <motion.span
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.45, delay: 0.1 }}
+                      className="inline-flex items-center gap-3 whitespace-nowrap"
                     >
-                      <motion.span animate={{ rotate: 360 }} transition={{ duration: 3, repeat: Infinity }}>
-                        <Zap className="mr-1 h-3 w-3" />
-                      </motion.span>
-                      Pannelli acustici su misura
-                    </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.15 }}
-                      className="inline-flex items-center rounded-full bg-muted/10 px-3 py-1 text-sm text-muted-foreground"
+                      <span aria-hidden="true" className="h-px w-6 bg-primary/35" />
+                      <span>Pannelli acustici su misura</span>
+                    </motion.span>
+                    <span aria-hidden="true" className="h-1 w-1 rounded-full bg-primary/35" />
+                    <motion.span
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.45, delay: 0.15 }}
+                      className="whitespace-nowrap"
                     >
-                      <Sparkles className="mr-1 h-3 w-3 text-primary" />
                       Spazio sonoro ottimizzato
-                    </motion.div>
+                    </motion.span>
                   </div>
                   <motion.h1
                     initial={{ opacity: 0, y: 30 }}
@@ -405,7 +425,7 @@ export function SoundProLanding() {
                     <Button
                       size="lg"
                       className="rounded-full group"
-                      onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                      onClick={() => scrollToSection("contact", { updateHash: false })}
                     >
                       Richiedi i nostri servizi
                       <motion.span
@@ -422,7 +442,7 @@ export function SoundProLanding() {
                       variant="outline"
                       size="lg"
                       className="rounded-full"
-                      onClick={() => document.getElementById('why')?.scrollIntoView({ behavior: 'smooth' })}
+                      onClick={() => scrollToSection("why", { updateHash: false })}
                     >
                       Scopri di più
                     </Button>
@@ -463,7 +483,7 @@ export function SoundProLanding() {
         {/* Method Section */}
         <section
           id="method"
-          className="w-full py-10 md:py-20 lg:py-24 bg-gradient-to-b from-[#f8fafc] via-white to-[#f1f5f9] relative overflow-hidden"
+          className="anchor-section w-full py-10 md:py-20 lg:py-24 bg-gradient-to-b from-[#f8fafc] via-white to-[#f1f5f9] relative overflow-hidden"
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 md:h-28 bg-gradient-to-b from-[#f8fafc]/85 via-[#f8fafc]/35 to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-28 bg-gradient-to-t from-[#edf3f8]/90 via-[#edf3f8]/35 to-transparent" />
@@ -541,7 +561,7 @@ export function SoundProLanding() {
         )}
         <section
           id="why"
-          className="w-full py-10 md:py-20 lg:py-24 bg-gradient-to-b from-[#edf3f8] via-[#f6f8fb] to-[#eef2f7] relative overflow-hidden"
+          className="anchor-section w-full py-10 md:py-20 lg:py-24 bg-gradient-to-b from-[#edf3f8] via-[#f6f8fb] to-[#eef2f7] relative overflow-hidden"
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 md:h-28 bg-gradient-to-b from-[#edf3f8]/90 via-[#edf3f8]/35 to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-28 bg-gradient-to-t from-[#e9eff6]/90 via-[#e9eff6]/35 to-transparent" />
@@ -624,7 +644,7 @@ export function SoundProLanding() {
         {/* Cases Section */}
         <section
           id="cases"
-          className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-[#e9eff6] via-[#f3f6fa] to-white relative overflow-hidden"
+          className="anchor-section w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-[#e9eff6] via-[#f3f6fa] to-white relative overflow-hidden"
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-20 md:h-24 bg-gradient-to-b from-[#e9eff6]/85 via-[#e9eff6]/30 to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36 bg-gradient-to-b from-white via-[#f7f3ed] to-[#f5f0e8]" />
@@ -702,7 +722,7 @@ export function SoundProLanding() {
                   <Button
                     size="lg"
                     className="rounded-full"
-                    onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                    onClick={() => scrollToSection("contact", { updateHash: false })}
                   >
                     Inizia qui
                   </Button>
@@ -713,7 +733,7 @@ export function SoundProLanding() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="w-full py-12 md:py-24 lg:py-32 relative overflow-hidden bg-[#f5f0e8]">
+        <section id="contact" className="anchor-section w-full py-12 md:py-24 lg:py-32 relative overflow-hidden bg-[#f5f0e8]">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -911,7 +931,13 @@ export function SoundProLanding() {
           <div className="grid gap-8 md:grid-cols-3 max-w-[90rem] mx-auto">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <img src="/soundpro-logo.png" alt="SoundPro Acoustic" className="h-8 w-auto" />
+                <Image
+                  src="/soundpro-logo.png"
+                  alt="SoundPro Acoustic"
+                  width={120}
+                  height={40}
+                  className="h-8 w-auto"
+                />
               </div>
               <p className="text-sm text-muted-foreground">
                 Pannelli acustici su misura per home studio, sale d&apos;ascolto e ambienti professionali.
@@ -934,16 +960,44 @@ export function SoundProLanding() {
             <div className="space-y-3">
               <h4 className="font-medium">Link veloci</h4>
               <nav className="flex flex-col space-y-2 text-sm">
-                <Link href="#why" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="#why"
+                  className="text-muted-foreground hover:text-primary"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    scrollToSection("why")
+                  }}
+                >
                   Perché
                 </Link>
-                <Link href="#method" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="#method"
+                  className="text-muted-foreground hover:text-primary"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    scrollToSection("method")
+                  }}
+                >
                   Metodo
                 </Link>
-                <Link href="#cases" className="text-muted-foreground hover:text-primary">
-                  Case Studio
+                <Link
+                  href="#cases"
+                  className="text-muted-foreground hover:text-primary"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    scrollToSection("cases")
+                  }}
+                >
+                  Lavori
                 </Link>
-                <Link href="#contact" className="text-muted-foreground hover:text-primary">
+                <Link
+                  href="#contact"
+                  className="text-muted-foreground hover:text-primary"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    scrollToSection("contact")
+                  }}
+                >
                   Contatti
                 </Link>
               </nav>

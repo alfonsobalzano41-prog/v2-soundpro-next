@@ -50,6 +50,7 @@
 
 :root {
   --radius: 0.625rem;
+  --section-anchor-offset: 100px;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -123,5 +124,19 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.anchor-section {
+  scroll-margin-top: var(--section-anchor-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
