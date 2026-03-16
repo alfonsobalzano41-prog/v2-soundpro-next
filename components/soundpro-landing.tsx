@@ -80,11 +80,26 @@ const socialLinks = [
   },
 ]
 
-const mobileNavItems = [
+const quickNavItems = [
+  { label: "Chi siamo", id: "chi-siamo" },
   { label: "Perché", id: "why" },
-  { label: "Metodo", id: "method" },
   { label: "Lavori", id: "cases" },
   { label: "Contatti", id: "contact" },
+]
+
+const aboutFeatureItems = [
+  {
+    title: "Progetti su misura",
+    description: "Soluzioni acustiche pensate sulle caratteristiche reali di ogni ambiente.",
+  },
+  {
+    title: "Analisi tecnica",
+    description: "Ogni intervento parte da rilievi concreti, non da soluzioni standard.",
+  },
+  {
+    title: "Rendering gratuiti",
+    description: "Ti mostriamo il risultato finale con render fotorealistici, senza impegno.",
+  },
 ]
 
 const ANCHOR_SCROLL_OFFSET = 100
@@ -130,9 +145,9 @@ const caseStudies: CaseStudy[] = [
       "/cases/case1/case1-4.jpg",
       "/cases/case1/case1-5.jpg",
     ],
-    problem: "Rimbombo eccessivo, suono confuso",
-    solution: "8 pannelli acustici su misura, posizionamento strategico",
-    result: "Chiarezza sui transienti, suono definito",
+    problem: "Rimbombo eccessivo sui bassi, suono confuso.",
+    solution: "Bass trap con scutter integrato e mix di diffusori e assorbitori, posizionamento strategico.",
+    result: "Chiarezza sui transienti, suono definito.",
   },
   {
     id: "case2",
@@ -143,9 +158,9 @@ const caseStudies: CaseStudy[] = [
       "/cases/case2/case2-3.jpeg",
       "/cases/case2/case2-4.jpg",
     ],
-    problem: "Riverbero eccessivo",
-    solution: "6 pannelli su misura",
-    result: "Migliore definizione sonora",
+    problem: "Riverbero eccessivo.",
+    solution: "Bass trap negli angoli e pannelli acustici su misura posizionati sui punti di prima riflessione.",
+    result: "Migliore definizione sonora.",
   },
   {
     id: "case3",
@@ -157,9 +172,9 @@ const caseStudies: CaseStudy[] = [
       "/cases/case3/case3-4.jpeg",
       "/cases/case3/case3-5.jpeg",
     ],
-    problem: "Problemi di fase",
-    solution: "Pannelli dimensionati ad-hoc",
-    result: "Immagine stereofonica più coerente",
+    problem: "Confusione nei transienti.",
+    solution: "Mix di assorbitori e diffusori posizionati ad-hoc.",
+    result: "Dettaglio e precisione, con un suono più naturale.",
   },
   {
     id: "case4",
@@ -170,9 +185,9 @@ const caseStudies: CaseStudy[] = [
       "/cases/case4/case4-3.jpg",
       "/cases/case4/case4-4.jpg",
     ],
-    problem: "Confusione nei transienti",
-    solution: "Mix di diffusori e assorbitori su misura",
-    result: "Dettaglio e precisione",
+    problem: "Rimbombo eccessivo, problemi di fase.",
+    solution: "Mix di diffusori e assorbitori su misura.",
+    result: "Dettaglio e precisione, immagine stereofonica più coerente.",
   },
 ]
 
@@ -338,8 +353,8 @@ export function SoundProLanding() {
             animate="visible"
             className="w-full px-4 md:px-6 lg:px-8 grid gap-3 pb-8 pt-6"
           >
-            {mobileNavItems.map((item, index) => (
-              <motion.div key={index} variants={itemFadeIn}>
+            {quickNavItems.map((item) => (
+              <motion.div key={item.id} variants={itemFadeIn}>
                 <Link
                   href={`#${item.id}`}
                   className="flex items-center justify-between rounded-3xl px-3 py-2 text-lg font-medium hover:bg-accent"
@@ -412,7 +427,7 @@ export function SoundProLanding() {
                     transition={{ duration: 0.7, delay: 0.4 }}
                     className="max-w-[600px] text-muted-foreground md:text-xl"
                   >
-                    Non sono i pannelli che mancano. È l&apos;analisi giusta. Progettiamo l&apos;acustica del tuo spazio con misurazioni reali.
+                    Non sono i pannelli che mancano. È l&apos;analisi giusta. Progettiamo l&apos;acustica del tuo spazio nei minimi dettagli.
                   </motion.p>
                 </div>
                 <motion.div
@@ -476,7 +491,48 @@ export function SoundProLanding() {
               </motion.div>
             </div>
           </div>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 md:h-52 bg-gradient-to-b from-transparent via-[#f8fafc]/70 to-[#f8fafc]" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-32 bg-gradient-to-b from-transparent via-[#f8fafc]/70 to-[#f8fafc]" />
+        </section>
+
+        {/* About Section */}
+        <section
+          id="chi-siamo"
+          className="anchor-section w-full py-8 md:py-10 lg:py-12 bg-gradient-to-b from-[#f8fafc] via-white to-[#f8fafc] relative overflow-hidden"
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-14 md:h-16 bg-gradient-to-b from-[#f8fafc]/85 via-[#f8fafc]/35 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 md:h-20 bg-gradient-to-t from-[#f8fafc]/75 via-[#f8fafc]/20 to-transparent" />
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+            className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
+          >
+            <div className="mx-auto max-w-[90rem]">
+              <div className="mx-auto flex max-w-[760px] flex-col items-center text-center sm:items-start sm:text-left">
+                <div className="inline-flex items-center gap-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-muted-foreground/80 sm:text-xs">
+                  <span aria-hidden="true" className="h-px w-6 bg-primary/35" />
+                  <span>Sound Pro Acoustic Design</span>
+                </div>
+                <h2 className="mt-3 text-3xl font-bold tracking-tighter sm:text-4xl">Chi siamo</h2>
+                <p className="mt-3 max-w-[42rem] text-sm leading-relaxed text-muted-foreground sm:text-base md:text-[1.05rem]">
+                  Sound Pro Acoustic Design nasce nel 2022 dalla passione per la musica e per l&apos;acustica degli spazi.
+                </p>
+              </div>
+
+              <div className="mx-auto mt-6 grid max-w-[90rem] gap-3 sm:mt-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
+                {aboutFeatureItems.map((item) => (
+                  <div
+                    key={item.title}
+                    className="rounded-3xl border border-border/70 bg-background/75 px-4 py-4 shadow-sm backdrop-blur-[2px] sm:px-5 sm:py-4"
+                  >
+                    <h3 className="text-base font-semibold tracking-tight sm:text-lg">{item.title}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         </section>
 
 
@@ -709,7 +765,7 @@ export function SoundProLanding() {
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className="mx-auto max-w-[760px] lg:max-w-[900px] text-muted-foreground md:text-xl"
                 >
-                  Richiedi l&apos;analisi acustica gratuita. Ti contatteremo entro 24 ore.
+                  Richiedi una consulenza acustica gratuita. Ti contatteremo entro 24 ore.
                 </motion.p>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -960,46 +1016,19 @@ export function SoundProLanding() {
             <div className="space-y-3">
               <h4 className="font-medium">Link veloci</h4>
               <nav className="flex flex-col space-y-2 text-sm">
-                <Link
-                  href="#why"
-                  className="text-muted-foreground hover:text-primary"
-                  onClick={(event) => {
-                    event.preventDefault()
-                    scrollToSection("why")
-                  }}
-                >
-                  Perché
-                </Link>
-                <Link
-                  href="#method"
-                  className="text-muted-foreground hover:text-primary"
-                  onClick={(event) => {
-                    event.preventDefault()
-                    scrollToSection("method")
-                  }}
-                >
-                  Metodo
-                </Link>
-                <Link
-                  href="#cases"
-                  className="text-muted-foreground hover:text-primary"
-                  onClick={(event) => {
-                    event.preventDefault()
-                    scrollToSection("cases")
-                  }}
-                >
-                  Lavori
-                </Link>
-                <Link
-                  href="#contact"
-                  className="text-muted-foreground hover:text-primary"
-                  onClick={(event) => {
-                    event.preventDefault()
-                    scrollToSection("contact")
-                  }}
-                >
-                  Contatti
-                </Link>
+                {quickNavItems.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={`#${item.id}`}
+                    className="text-muted-foreground hover:text-primary"
+                    onClick={(event) => {
+                      event.preventDefault()
+                      scrollToSection(item.id)
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
               </nav>
             </div>
             <div className="space-y-3">
