@@ -87,20 +87,23 @@ const quickNavItems = [
   { label: "Contatti", id: "contact" },
 ]
 
-const aboutFeatureItems = [
-  {
-    title: "Progetti su misura",
-    description: "Soluzioni acustiche pensate sulle caratteristiche reali di ogni ambiente.",
-  },
-  {
-    title: "Analisi tecnica",
-    description: "Ogni intervento parte da rilievi concreti, non da soluzioni standard.",
-  },
-  {
-    title: "Rendering gratuiti",
-    description: "Ti mostriamo il risultato finale con render fotorealistici, senza impegno.",
-  },
+const contactDetailItems = [
+  { icon: MapPin, label: "Ubicazione", text: "Ercolano (NA), Italia" },
+  { icon: Mail, label: "Email", text: "info@soundproacoustic.com" },
 ]
+
+const ENABLE_ABOUT_PHOTO_PANEL = true
+
+const ABOUT_SECTION_CONFIG = {
+  photoSrc: "/about-soundpro-panel.jpeg",
+  fallbackPhotoSrc: "/hero-product.jpg",
+  imageAlt: "Pannello acustico Sound Pro con badge del brand",
+  imageObjectPosition: "20% center",
+}
+
+const ENABLE_ABOUT_FULL_BLEED = true
+
+const ENABLE_HERO_DESKTOP_DEZOOM = true
 
 const ANCHOR_SCROLL_OFFSET = 100
 
@@ -198,8 +201,9 @@ export function SoundProLanding() {
   const [isFormCompleted, setIsFormCompleted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedFilesCount, setSelectedFilesCount] = useState(0)
+  const [aboutPanelImageSrc, setAboutPanelImageSrc] = useState(ABOUT_SECTION_CONFIG.photoSrc)
   // Feature flags
-  const ENABLE_SECTION_DIVIDERS = true
+  const ENABLE_SECTION_DIVIDERS = false
   const ENABLE_HERO_WORK_SHOWCASE = true // reversible: set false to restore single static hero image
   const ENABLE_CASES_VISUAL_GALLERY = true // reversible: set false to keep all case cards in static mode
 
@@ -472,7 +476,11 @@ export function SoundProLanding() {
               >
                 <motion.div
                   animate={floatingAnimation}
-                  className="relative w-full h-[360px] sm:h-[460px] md:h-[560px] lg:h-auto lg:-mr-16 lg:w-[135%] xl:w-[140%] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[720px] overflow-hidden rounded-[40px] flex items-center justify-center shadow-2xl lg:ml-auto"
+                  className={`relative w-full h-[360px] sm:h-[460px] md:h-[560px] lg:h-auto ${
+                    ENABLE_HERO_DESKTOP_DEZOOM
+                      ? "lg:-mr-8 xl:-mr-10 lg:w-[122%] xl:w-[128%] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[680px]"
+                      : "lg:-mr-16 lg:w-[135%] xl:w-[140%] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[720px]"
+                  } overflow-hidden rounded-[40px] flex items-center justify-center shadow-2xl lg:ml-auto`}
                 >
                 {/* Reversible Hero visual upgrade: auto-rotating showcase card */}
                 {ENABLE_HERO_WORK_SHOWCASE ? (
@@ -491,58 +499,148 @@ export function SoundProLanding() {
               </motion.div>
             </div>
           </div>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-32 bg-gradient-to-b from-transparent via-[#f8fafc]/70 to-[#f8fafc]" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 md:h-10 bg-gradient-to-b from-transparent via-[#dce5e8]/10 to-[#dce5e8]/28" />
         </section>
 
         {/* About Section */}
         <section
           id="chi-siamo"
-          className="anchor-section w-full py-8 md:py-10 lg:py-12 bg-gradient-to-b from-[#f8fafc] via-white to-[#f8fafc] relative overflow-hidden"
+          className={`anchor-section relative w-full overflow-hidden ${
+            ENABLE_ABOUT_FULL_BLEED
+              ? "bg-[#dce5e8]"
+              : "py-5 md:py-7 lg:py-8 bg-gradient-to-b from-[#f8fafc] via-white to-[#f8fafc]"
+          }`}
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-14 md:h-16 bg-gradient-to-b from-[#f8fafc]/85 via-[#f8fafc]/35 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 md:h-20 bg-gradient-to-t from-[#f8fafc]/75 via-[#f8fafc]/20 to-transparent" />
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeIn}
-            className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
-          >
-            <div className="mx-auto max-w-[90rem]">
-              <div className="mx-auto flex max-w-[760px] flex-col items-center text-center sm:items-start sm:text-left">
-                <div className="inline-flex items-center gap-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-muted-foreground/80 sm:text-xs">
-                  <span aria-hidden="true" className="h-px w-6 bg-primary/35" />
-                  <span>Sound Pro Acoustic Design</span>
-                </div>
-                <h2 className="mt-3 text-3xl font-bold tracking-tighter sm:text-4xl">Chi siamo</h2>
-                <p className="mt-3 max-w-[42rem] text-sm leading-relaxed text-muted-foreground sm:text-base md:text-[1.05rem]">
-                  Sound Pro Acoustic Design nasce nel 2022 dalla passione per la musica e per l&apos;acustica degli spazi.
-                </p>
-              </div>
-
-              <div className="mx-auto mt-6 grid max-w-[90rem] gap-3 sm:mt-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
-                {aboutFeatureItems.map((item) => (
-                  <div
-                    key={item.title}
-                    className="rounded-3xl border border-border/70 bg-background/75 px-4 py-4 shadow-sm backdrop-blur-[2px] sm:px-5 sm:py-4"
-                  >
-                    <h3 className="text-base font-semibold tracking-tight sm:text-lg">{item.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+          {ENABLE_ABOUT_FULL_BLEED ? (
+            <>
+              {ENABLE_ABOUT_PHOTO_PANEL && (
+                <>
+                  <div className="absolute inset-0">
+                    <Image
+                      src={aboutPanelImageSrc}
+                      alt={ABOUT_SECTION_CONFIG.imageAlt}
+                      fill
+                      sizes="100vw"
+                      className="object-cover opacity-[0.88] saturate-[0.82] brightness-[0.8] scale-[1.02]"
+                      style={{ objectPosition: ABOUT_SECTION_CONFIG.imageObjectPosition }}
+                      onError={() => {
+                        setAboutPanelImageSrc((currentSrc) => {
+                          if (currentSrc === ABOUT_SECTION_CONFIG.fallbackPhotoSrc) {
+                            return currentSrc
+                          }
+                          return ABOUT_SECTION_CONFIG.fallbackPhotoSrc
+                        })
+                      }}
+                    />
                   </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(25,41,48,0.14)_0%,rgba(33,53,61,0.08)_24%,rgba(235,241,243,0.18)_58%,rgba(245,247,248,0.3)_100%)]" />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(236,242,244,0.22)_0%,rgba(236,242,244,0.18)_32%,rgba(240,244,245,0.24)_100%)]" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_22%,rgba(255,255,255,0.16),rgba(255,255,255,0.05)_38%,transparent_68%)]" />
+                </>
+              )}
+
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeIn}
+                className="relative z-10 w-full"
+              >
+                <div className="mx-auto flex min-h-[360px] max-w-[92rem] items-center justify-center px-6 py-10 sm:min-h-[420px] md:px-8 md:py-12 lg:min-h-[500px] lg:px-10 lg:py-14">
+                  <div className="w-full max-w-[44rem] text-center">
+                    <div className="inline-flex items-center gap-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/82 sm:text-xs">
+                      
+                    </div>
+                    <h2 className="mt-3 text-4xl font-bold tracking-tighter text-white sm:text-5xl lg:text-[4.25rem]">
+                      Chi siamo
+                    </h2>
+                    <div className="mx-auto mt-4 max-w-[40rem] space-y-2 text-sm leading-relaxed text-white/88 sm:text-base md:text-[1.04rem]">
+                      <p>
+                        Sound Pro Acoustic Design nasce nel 2022 a Ercolano, dall&apos;incontro tra musica, acustica e cura artigianale del dettaglio.
+                      </p>
+                      <p>
+                        Progettiamo interventi acustici per spazi in cui il suono non può essere lasciato al caso, con un approccio concreto e attenzione anche all&apos;estetica.
+                      </p>
+                    </div>
+                    <p className="mt-5 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-white/70 sm:text-[0.78rem]">
+                      Ercolano, Napoli
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          ) : (
+            <>
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-10 md:h-14 bg-gradient-to-b from-[#f8fafc]/90 via-[#f8fafc]/40 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 md:h-16 bg-gradient-to-t from-[#f8fafc]/80 via-[#f8fafc]/20 to-transparent" />
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeIn}
+                className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
+              >
+                <div className="mx-auto max-w-[90rem]">
+                  <div className="relative overflow-hidden rounded-[30px] border border-white/60 bg-white/52 shadow-[0_30px_90px_rgba(64,94,117,0.12)]">
+                    {ENABLE_ABOUT_PHOTO_PANEL && (
+                      <>
+                        <div className="absolute inset-0">
+                          <Image
+                            src={aboutPanelImageSrc}
+                            alt={ABOUT_SECTION_CONFIG.imageAlt}
+                            fill
+                            sizes="(min-width: 1536px) 78rem, (min-width: 1024px) 88vw, 100vw"
+                            className="object-cover opacity-76 saturate-[0.88] brightness-[0.9] scale-[1.03]"
+                            style={{ objectPosition: ABOUT_SECTION_CONFIG.imageObjectPosition }}
+                            onError={() => {
+                              setAboutPanelImageSrc((currentSrc) => {
+                                if (currentSrc === ABOUT_SECTION_CONFIG.fallbackPhotoSrc) {
+                                  return currentSrc
+                                }
+                                return ABOUT_SECTION_CONFIG.fallbackPhotoSrc
+                              })
+                            }}
+                          />
+                        </div>
+                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(248,250,252,0.28)_0%,rgba(248,250,252,0.22)_24%,rgba(248,250,252,0.3)_52%,rgba(255,255,255,0.42)_100%)]" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_24%,rgba(255,255,255,0.24),rgba(255,255,255,0.08)_42%,transparent_74%)]" />
+                        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.08)_36%,rgba(255,255,255,0.12)_100%)]" />
+                      </>
+                    )}
+
+                    <div className="relative z-10 flex min-h-[320px] items-center justify-center px-5 py-8 sm:min-h-[350px] sm:px-7 sm:py-10 lg:min-h-[390px] lg:px-10 lg:py-12">
+                      <div className="w-full max-w-[46rem] rounded-[28px] border border-white/42 bg-white/18 p-5 text-center backdrop-blur-[10px] sm:p-6 lg:max-w-[42rem] lg:p-8">
+                        <div className="inline-flex items-center gap-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/88 sm:text-xs">
+                          <span aria-hidden="true" className="h-px w-6 bg-slate-500/40" />
+                          <span>Sound Pro Acoustic Design</span>
+                        </div>
+                        <h2 className="mt-3 text-3xl font-bold tracking-tighter text-white sm:text-4xl md:text-[2.8rem]">Chi siamo</h2>
+                        <div className="mx-auto mt-3 max-w-[39rem] space-y-2 text-sm leading-relaxed text-white/88 sm:text-[0.98rem] md:text-[1.02rem]">
+                          <p>
+                            Sound Pro Acoustic Design nasce nel 2022 a Ercolano, dall&apos;incontro tra musica, acustica e cura artigianale del dettaglio.
+                          </p>
+                          <p>
+                            Progettiamo interventi acustici per spazi in cui il suono non può essere lasciato al caso, con un approccio concreto e attenzione anche all&apos;estetica.
+                          </p>
+                        </div>
+                        <p className="mt-4 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-white/72 sm:text-[0.78rem]">
+                          Ercolano, Napoli
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
         </section>
 
 
         {/* Method Section */}
         <section
           id="method"
-          className="anchor-section w-full py-10 md:py-20 lg:py-24 bg-gradient-to-b from-[#f8fafc] via-white to-[#f1f5f9] relative overflow-hidden"
+          className="anchor-section w-full py-8 md:py-14 lg:py-16 bg-[#eef3f5] relative overflow-hidden"
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 md:h-28 bg-gradient-to-b from-[#f8fafc]/85 via-[#f8fafc]/35 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-28 bg-gradient-to-t from-[#edf3f8]/90 via-[#edf3f8]/35 to-transparent" />
           <div className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full">
             <motion.div
             variants={staggerContainer}
@@ -553,7 +651,7 @@ export function SoundProLanding() {
           >
             <motion.div 
               variants={fadeIn}
-              className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
+              className="flex flex-col items-center justify-center space-y-4 text-center mb-8 md:mb-10"
             >
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Come lavoriamo</h2>
               <p className="mx-auto max-w-[760px] lg:max-w-[900px] text-muted-foreground md:text-xl">
@@ -576,7 +674,7 @@ export function SoundProLanding() {
                   step: "1",
                   title: "Sopralluogo e Misurazione",
                   description:
-                    "Visitiamo il tuo spazio e rileviamo con strumenti professionali frequenze, riverbero e problemi di fase, per partire da dati reali.",
+                    "Visitiamo il tuo spazio e rileviamo con strumenti professionali la risposta in frequenze, riverbero e problemi di fase, per partire da dati reali.",
                 },
                 {
                   step: "2",
@@ -587,7 +685,7 @@ export function SoundProLanding() {
                 {
                   step: "3",
                   title: "Realizzazione Artigianale",
-                  description: "Costruiamo ogni pannello a mano. Installazione professionale inclusa.",
+                  description: "Costruiamo ogni elemento a mano, con materiali di alta qualità. Installazione professionale su richiesta.",
                 },
               ].map((item, index) => (
                 <motion.div
@@ -617,10 +715,8 @@ export function SoundProLanding() {
         )}
         <section
           id="why"
-          className="anchor-section w-full py-10 md:py-20 lg:py-24 bg-gradient-to-b from-[#edf3f8] via-[#f6f8fb] to-[#eef2f7] relative overflow-hidden"
+          className="anchor-section w-full py-8 md:py-14 lg:py-16 bg-[#ecf1f3] relative overflow-hidden"
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 md:h-28 bg-gradient-to-b from-[#edf3f8]/90 via-[#edf3f8]/35 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 md:h-28 bg-gradient-to-t from-[#e9eff6]/90 via-[#e9eff6]/35 to-transparent" />
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -628,7 +724,7 @@ export function SoundProLanding() {
             variants={fadeIn}
             className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
           >
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8 md:mb-10">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                 Perché i pannelli standard non risolvono il tuo problema
               </h2>
@@ -660,9 +756,9 @@ export function SoundProLanding() {
                 },
                 {
                   icon: "🛠️",
-                  title: "Artigianalità vs. Industriale",
+                  title: "Materiali scelti, lavorazione artigianale",
                   description:
-                    "Pannelli su misura, realizzati a mano, con materiali scelti per il TUO spazio.",
+                    "Realizziamo pannelli artigianali con materiali selezionati, come legno multistrato di pioppo, lane minerali certificate e tessuti fonotraspiranti, per integrarsi nel tuo spazio con efficacia e cura estetica.",
                 },
               ].map((item, index) => (
                 <motion.div
@@ -700,10 +796,8 @@ export function SoundProLanding() {
         {/* Cases Section */}
         <section
           id="cases"
-          className="anchor-section w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-[#e9eff6] via-[#f3f6fa] to-white relative overflow-hidden"
+          className="anchor-section w-full py-10 md:py-16 lg:py-20 bg-gradient-to-b from-[#ecf1f3] via-[#eff2f1] to-[#f3eee6] relative overflow-hidden"
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-20 md:h-24 bg-gradient-to-b from-[#e9eff6]/85 via-[#e9eff6]/30 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36 bg-gradient-to-b from-white via-[#f7f3ed] to-[#f5f0e8]" />
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -713,7 +807,7 @@ export function SoundProLanding() {
           >
             <motion.div 
               variants={fadeIn}
-              className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
+              className="flex flex-col items-center justify-center space-y-4 text-center mb-8 md:mb-10"
             >
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Spazi trasformati</h2>
               <p className="mx-auto max-w-[760px] lg:max-w-[900px] text-muted-foreground md:text-xl">
@@ -736,8 +830,8 @@ export function SoundProLanding() {
           </motion.div>
         </section>
 
-        {/* CTA Final Section */}
-        <section className="w-full py-14 md:py-28 lg:py-36 relative bg-[#f5f0e8]">
+        {/* Contact Section */}
+        <section id="contact" className="anchor-section w-full py-10 md:py-14 lg:py-16 relative overflow-hidden bg-[#f3eee6]">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -745,237 +839,187 @@ export function SoundProLanding() {
             variants={fadeIn}
             className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
           >
-            <motion.div
-              whileHover={{ boxShadow: "0 20px 60px rgba(107, 163, 212, 0.2)" }}
-              transition={{ duration: 0.3 }}
-              className="border border-muted rounded-3xl bg-background py-16 px-6 md:px-12 relative overflow-hidden"
-            >
-              <div className="flex flex-col items-center justify-center space-y-4 text-center relative z-10">
-                <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl"
-                >
+            <div className="max-w-[90rem] mx-auto rounded-[32px] border border-white/60 bg-background/78 px-5 py-6 shadow-[0_26px_70px_rgba(64,94,117,0.1)] backdrop-blur-sm sm:px-6 md:px-8 md:py-8 lg:px-10 lg:py-10">
+              <div className="mx-auto max-w-[48rem] text-center">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                   Pronto a trasformare il tuo spazio?
-                </motion.h2>
-                <motion.p
+                </h2>
+                <p className="mt-3 text-muted-foreground md:text-xl">
+                  Raccontaci il tuo progetto e compila il form. Ti ricontatteremo entro 24 ore con i prossimi passi per l&apos;analisi acustica del tuo spazio.
+                </p>
+              </div>
+
+              <div className="mt-8 mx-auto max-w-[52rem]">
+                <div className="mb-4 inline-flex items-center gap-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-muted-foreground/80 sm:text-xs">
+                  <span aria-hidden="true" className="h-px w-6 bg-primary/35" />
+                  <span>Richiedi i nostri servizi</span>
+                </div>
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  className="mx-auto max-w-[760px] lg:max-w-[900px] text-muted-foreground md:text-xl"
+                  transition={{ duration: 0.6, delay: 0.05 }}
+                  className="rounded-3xl border bg-background p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  Richiedi una consulenza acustica gratuita. Ti contatteremo entro 24 ore.
-                </motion.p>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="mt-6"
-                >
-                  <Button
-                    size="lg"
-                    className="rounded-full"
-                    onClick={() => scrollToSection("contact", { updateHash: false })}
-                  >
-                    Inizia qui
-                  </Button>
+                  <AnimatePresence mode="wait">
+                    {!isFormCompleted ? (
+                      <motion.form
+                        key="contact-form"
+                        onSubmit={handleFormSubmit}
+                        className="space-y-3"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -16, scale: 0.98 }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
+                      >
+                        <h3 className="mb-2 text-xl font-bold">Compila il form</h3>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          <motion.div whileHover={{ scale: 1.02 }}>
+                            <Input
+                              name="name"
+                              placeholder="Nome"
+                              required
+                              className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
+                            />
+                          </motion.div>
+                          <motion.div whileHover={{ scale: 1.02 }}>
+                            <Input
+                              name="email"
+                              type="email"
+                              placeholder="Email"
+                              required
+                              className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
+                            />
+                          </motion.div>
+                        </div>
+                        <motion.div whileHover={{ scale: 1.02 }}>
+                          <Input name="phone" type="tel" placeholder="Telefono (opzionale)" className="rounded-2xl" />
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.02 }} className="relative">
+                          <select
+                            name="service"
+                            className="w-full appearance-none rounded-2xl border border-[#d8dde4] bg-[#f3f5f7] px-3 py-2 pr-10 text-sm text-foreground transition-colors focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            required
+                          >
+                            <option value="">Seleziona servizio</option>
+                            <option>Progetto acustico (sopralluogo + misurazione)</option>
+                            <option>Prodotti su misura (pannelli acustici artigianali)</option>
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.02 }}>
+                          <Textarea
+                            name="message"
+                            placeholder="Descrivi il tuo progetto"
+                            className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
+                            rows={4}
+                          />
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.02 }}>
+                          <Input name="roomSize" type="text" placeholder="Misura stanza (es: 5m x 4m x 3m)" className="rounded-2xl" />
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.01 }} className="space-y-1">
+                          <label htmlFor="attachments" className="text-sm font-medium">
+                            Allegati (opzionale)
+                          </label>
+                          <input
+                            id="attachments"
+                            name="attachments"
+                            type="file"
+                            multiple
+                            accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                            onChange={(e) => setSelectedFilesCount(e.target.files?.length ?? 0)}
+                            className="block w-full rounded-2xl border border-input bg-background px-3 py-2 text-xs sm:text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-xs sm:file:text-sm file:font-medium file:text-primary hover:file:bg-primary/20"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Carica planimetrie, foto o documenti ({selectedFilesCount} selezionati).
+                          </p>
+                        </motion.div>
+                        <label className="flex items-center gap-2">
+                          <input name="privacyAccepted" type="checkbox" required />
+                          <span className="text-sm underline underline-offset-2">Accetto la privacy</span>
+                        </label>
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Button type="submit" className="w-full rounded-full" disabled={isSubmitting}>
+                            {isSubmitting ? "Invio in corso..." : "Invia"}
+                          </Button>
+                        </motion.div>
+                        {formError && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="mt-2 text-sm text-red-600"
+                          >
+                            {formError}
+                          </motion.div>
+                        )}
+                      </motion.form>
+                    ) : (
+                      <motion.div
+                        key="contact-thank-you"
+                        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -12 }}
+                        transition={{ duration: 0.45, ease: "easeOut" }}
+                        className="space-y-5"
+                      >
+                        <div className="inline-flex items-center rounded-full border border-primary/30 bg-background/80 px-3 py-1 text-xs font-medium text-primary">
+                          Richiesta inviata
+                        </div>
+                        <div className="space-y-2">
+                          <h4 className="text-2xl font-bold tracking-tight">Grazie per averci contattato.</h4>
+                          <p className="text-sm text-muted-foreground sm:text-base">
+                            Ti risponderemo entro 24 ore con i prossimi passi per l&apos;analisi acustica del tuo spazio.
+                          </p>
+                        </div>
+                        <div className="rounded-2xl border border-primary/20 bg-background/70 p-4">
+                          <p className="text-sm font-medium">Nel frattempo, seguici sui social:</p>
+                          <div className="mt-3 flex items-center gap-3">
+                            {socialLinks.map((social) => (
+                              <a
+                                key={social.label}
+                                href={social.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="rounded-full border border-input bg-background p-2 text-muted-foreground transition-colors hover:text-primary"
+                                aria-label={social.label}
+                              >
+                                <social.icon className="h-5 w-5" />
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <div className="mt-6 border-t border-border/70 pt-5">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {contactDetailItems.map((item) => (
+                        <motion.div
+                          key={item.label}
+                          whileHover={{ x: 6 }}
+                          transition={{ type: "spring", stiffness: 300 }}
+                          className="flex items-start gap-3 group"
+                        >
+                          <motion.div
+                            className="rounded-full bg-primary/20 p-2 group-hover:bg-primary/30 transition-colors"
+                            whileHover={{ scale: 1.08, rotate: 4 }}
+                          >
+                            <item.icon className="h-5 w-5 text-primary" />
+                          </motion.div>
+                          <div>
+                            <h3 className="font-medium">{item.label}</h3>
+                            <p className="text-sm text-muted-foreground">{item.text}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
                 </motion.div>
               </div>
-            </motion.div>
-          </motion.div>
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact" className="anchor-section w-full py-12 md:py-24 lg:py-32 relative overflow-hidden bg-[#f5f0e8]">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeIn}
-            className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full"
-          >
-            <div className="grid items-center gap-8 lg:grid-cols-2 max-w-[88rem] mx-auto">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className="space-y-3"
-              >
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Richiedi i nostri servizi</h2>
-                <p className="text-muted-foreground md:text-xl">
-                  Contattaci per iniziare a trasformare il tuo spazio acustico. Ti risponderemo entro 24 ore.
-                </p>
-                <div className="mt-8 space-y-4">
-                  {[
-                    { icon: MapPin, label: "Ubicazione", text: "Ercolano (NA), Italia" },
-                    { icon: Mail, label: "Email", text: "info@soundproacoustic.com" },
-                  ].map((item, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ x: 10 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                      className="flex items-start gap-3 group"
-                    >
-                      <motion.div
-                        className="rounded-full bg-primary/20 p-2 group-hover:bg-primary/30 transition-colors"
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                      >
-                        <item.icon className="h-5 w-5 text-primary" />
-                      </motion.div>
-                      <div>
-                        <h3 className="font-medium">{item.label}</h3>
-                        <p className="text-sm text-muted-foreground">{item.text}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="rounded-3xl border bg-background p-6 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <AnimatePresence mode="wait">
-                  {!isFormCompleted ? (
-                    <motion.form
-                      key="contact-form"
-                      onSubmit={handleFormSubmit}
-                      className="space-y-3"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -16, scale: 0.98 }}
-                      transition={{ duration: 0.35, ease: "easeOut" }}
-                    >
-                      <h3 className="mb-2 text-xl font-bold">Contattaci</h3>
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <motion.div whileHover={{ scale: 1.02 }}>
-                          <Input
-                            name="name"
-                            placeholder="Nome"
-                            required
-                            className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
-                          />
-                        </motion.div>
-                        <motion.div whileHover={{ scale: 1.02 }}>
-                          <Input
-                            name="email"
-                            type="email"
-                            placeholder="Email"
-                            required
-                            className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
-                          />
-                        </motion.div>
-                      </div>
-                      <motion.div whileHover={{ scale: 1.02 }}>
-                        <Input name="phone" type="tel" placeholder="Telefono (opzionale)" className="rounded-2xl" />
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.02 }} className="relative">
-                        <select
-                          name="service"
-                          className="w-full appearance-none rounded-2xl border border-[#d8dde4] bg-[#f3f5f7] px-3 py-2 pr-10 text-sm text-foreground transition-colors focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                          required
-                        >
-                          <option value="">Seleziona servizio</option>
-                          <option>Progetto acustico (sopralluogo + misurazione)</option>
-                          <option>Prodotti su misura (pannelli acustici artigianali)</option>
-                        </select>
-                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/80" />
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.02 }}>
-                        <Textarea
-                          name="message"
-                          placeholder="Descrivi il tuo progetto"
-                          className="rounded-2xl border-[#d8dde4] bg-[#f3f5f7] focus-visible:border-primary/50 focus-visible:ring-primary/20"
-                          rows={4}
-                        />
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.02 }}>
-                        <Input name="roomSize" type="text" placeholder="Misura stanza (es: 5m x 4m x 3m)" className="rounded-2xl" />
-                      </motion.div>
-                      <motion.div whileHover={{ scale: 1.01 }} className="space-y-1">
-                        <label htmlFor="attachments" className="text-sm font-medium">
-                          Allegati (opzionale)
-                        </label>
-                        <input
-                          id="attachments"
-                          name="attachments"
-                          type="file"
-                          multiple
-                          accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
-                          onChange={(e) => setSelectedFilesCount(e.target.files?.length ?? 0)}
-                          className="block w-full rounded-2xl border border-input bg-background px-3 py-2 text-xs sm:text-sm file:mr-3 file:rounded-full file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-xs sm:file:text-sm file:font-medium file:text-primary hover:file:bg-primary/20"
-                        />
-                        <p className="text-xs text-muted-foreground">
-                          Carica planimetrie, foto o documenti ({selectedFilesCount} selezionati).
-                        </p>
-                      </motion.div>
-                      <label className="flex items-center gap-2">
-                        <input name="privacyAccepted" type="checkbox" required />
-                        <span className="text-sm underline underline-offset-2">Accetto la privacy</span>
-                      </label>
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Button type="submit" className="w-full rounded-full" disabled={isSubmitting}>
-                          {isSubmitting ? "Invio in corso..." : "Invia"}
-                        </Button>
-                      </motion.div>
-                      {formError && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="mt-2 text-sm text-red-600"
-                        >
-                          {formError}
-                        </motion.div>
-                      )}
-                    </motion.form>
-                  ) : (
-                    <motion.div
-                      key="contact-thank-you"
-                      initial={{ opacity: 0, y: 20, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -12 }}
-                      transition={{ duration: 0.45, ease: "easeOut" }}
-                      className="space-y-5"
-                    >
-                      <div className="inline-flex items-center rounded-full border border-primary/30 bg-background/80 px-3 py-1 text-xs font-medium text-primary">
-                        Richiesta inviata
-                      </div>
-                      <div className="space-y-2">
-                        <h4 className="text-2xl font-bold tracking-tight">Grazie per averci contattato.</h4>
-                        <p className="text-sm text-muted-foreground sm:text-base">
-                          Ti risponderemo entro 24 ore con i prossimi passi per l&apos;analisi acustica del tuo spazio.
-                        </p>
-                      </div>
-                      <div className="rounded-2xl border border-primary/20 bg-background/70 p-4">
-                        <p className="text-sm font-medium">Nel frattempo, seguici sui social:</p>
-                        <div className="mt-3 flex items-center gap-3">
-                          {socialLinks.map((social) => (
-                            <a
-                              key={social.label}
-                              href={social.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="rounded-full border border-input bg-background p-2 text-muted-foreground transition-colors hover:text-primary"
-                              aria-label={social.label}
-                            >
-                              <social.icon className="h-5 w-5" />
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
             </div>
           </motion.div>
         </section>

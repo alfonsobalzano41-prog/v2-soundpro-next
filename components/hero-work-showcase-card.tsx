@@ -21,8 +21,9 @@ const HERO_SHOWCASE_CONFIG = {
   crossfadeSeconds: 0.75,
   preloadAhead: 2,
   baseScale: 1,
-  activeScale: 1.035,
-  hoverScale: 1.018,
+  activeScale: 1.014,
+  hoverScale: 1.01,
+  exitScale: 1.008,
 }
 
 // Hero photos already present in /public.
@@ -127,7 +128,7 @@ export function HeroWorkShowcaseCard({ enabled = true }: HeroWorkShowcaseCardPro
             className="relative h-full w-full"
             initial={{ opacity: 0, scale: HERO_SHOWCASE_CONFIG.baseScale }}
             animate={{ opacity: 1, scale: HERO_SHOWCASE_CONFIG.activeScale }}
-            exit={{ opacity: 0, scale: 1.02 }}
+            exit={{ opacity: 0, scale: HERO_SHOWCASE_CONFIG.exitScale }}
             transition={{
               duration: HERO_SHOWCASE_CONFIG.crossfadeSeconds,
               ease: "easeInOut",
@@ -138,7 +139,7 @@ export function HeroWorkShowcaseCard({ enabled = true }: HeroWorkShowcaseCardPro
               alt={activeImage.alt}
               fill
               priority={activeIndex === 0}
-              sizes="(min-width: 1536px) 64rem, (min-width: 1280px) 58rem, (min-width: 1024px) 52vw, 100vw"
+              sizes="(min-width: 1536px) 58rem, (min-width: 1280px) 53rem, (min-width: 1024px) 48vw, 100vw"
               className="object-cover transition-[filter] duration-500 group-hover:brightness-110"
               style={{ objectPosition: activeImage.objectPosition ?? "center center" }}
               onError={() => {
