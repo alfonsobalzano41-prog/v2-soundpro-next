@@ -149,7 +149,7 @@ const caseStudies: CaseStudy[] = [
       "/cases/case1/case1-5.jpg",
     ],
     problem: "Rimbombo eccessivo sui bassi, suono confuso.",
-    solution: "Bass trap con scutter integrato e mix di diffusori e assorbitori, posizionamento strategico.",
+    solution: "Bass trap con scatter integrato e mix di diffusori e assorbitori, posizionamento strategico.",
     result: "Chiarezza sui transienti, suono definito.",
   },
   {
