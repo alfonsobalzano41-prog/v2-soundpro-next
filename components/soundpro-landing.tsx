@@ -758,7 +758,7 @@ export function SoundProLanding() {
                   icon: "🛠️",
                   title: "Materiali scelti, lavorazione artigianale",
                   description:
-                    "Realizziamo pannelli artigianali con materiali selezionati, come legno multistrato di pioppo, lane minerali certificate e tessuti fonotraspiranti, per integrarsi nel tuo spazio con efficacia e cura estetica.",
+                    "Realizziamo pannelli artigianali con materiali selezionati, come legno massello e multistrato, lane minerali certificate e tessuti fonotraspiranti, per integrarsi nel tuo spazio con efficacia e cura estetica.",
                 },
               ].map((item, index) => (
                 <motion.div
