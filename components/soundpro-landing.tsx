@@ -379,15 +379,15 @@ export function SoundProLanding() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full min-h-screen flex items-center overflow-hidden relative">
-          <div className="w-full px-4 md:px-6 lg:px-8 relative z-10 max-w-full">
-            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center max-w-[92rem] mx-auto">
+        <section className="landing-hero-section relative flex w-full min-h-screen items-center overflow-hidden">
+          <div className="landing-hero-content relative z-10 w-full max-w-full px-4 md:px-6 lg:px-8">
+            <div className="landing-hero-grid mx-auto grid max-w-[92rem] items-center gap-8 lg:grid-cols-2 lg:gap-12">
               <motion.div
                 initial={false}
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={slideInLeft}
-                className="flex flex-col justify-center space-y-4 py-10"
+                className="landing-hero-copy flex flex-col justify-center space-y-4 py-10"
               >
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-muted-foreground/80 sm:text-xs md:text-sm">
@@ -468,15 +468,15 @@ export function SoundProLanding() {
                   </motion.div>
                 </motion.div>
               </motion.div>
-                <motion.div
-                  initial={false}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="flex items-center justify-center h-full"
+              <motion.div
+                initial={false}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="landing-hero-media-shell flex h-full items-center justify-center"
               >
                 <motion.div
                   animate={floatingAnimation}
-                  className={`relative w-full h-[360px] sm:h-[460px] md:h-[560px] lg:h-auto ${
+                  className={`landing-hero-media relative h-[360px] w-full sm:h-[460px] md:h-[560px] lg:h-auto ${
                     ENABLE_HERO_DESKTOP_DEZOOM
                       ? "lg:-mr-8 xl:-mr-10 lg:w-[122%] xl:w-[128%] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[680px]"
                       : "lg:-mr-16 lg:w-[135%] xl:w-[140%] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[720px]"
@@ -499,7 +499,7 @@ export function SoundProLanding() {
               </motion.div>
             </div>
           </div>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 md:h-10 bg-gradient-to-b from-transparent via-[#dce5e8]/10 to-[#dce5e8]/28" />
+          <div className="landing-hero-bottom-fade pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent via-[#dce5e8]/10 to-[#dce5e8]/28 md:h-10" />
         </section>
 
         {/* About Section */}

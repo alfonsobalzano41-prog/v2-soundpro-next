@@ -135,6 +135,39 @@
   scroll-margin-top: var(--section-anchor-offset);
 }
 
+@media (max-width: 767px) and (max-height: 900px) {
+  .landing-hero-section {
+    min-height: auto;
+    align-items: flex-start;
+    overflow: visible;
+  }
+
+  .landing-hero-content {
+    padding-top: clamp(1.25rem, 3.5svh, 2rem);
+    padding-bottom: clamp(2.5rem, 6svh, 4rem);
+  }
+
+  .landing-hero-grid {
+    align-items: start;
+    gap: clamp(1.5rem, 4svh, 2.25rem);
+  }
+
+  .landing-hero-copy {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .landing-hero-media-shell {
+    height: auto;
+    align-items: flex-start;
+  }
+
+  .landing-hero-media {
+    height: clamp(260px, 38svh, 340px);
+    margin-bottom: clamp(1.5rem, 4svh, 2.5rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
