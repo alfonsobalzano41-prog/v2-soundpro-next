@@ -110,7 +110,7 @@ export function CaseStudyCard({ item, enableGallery = false }: CaseStudyCardProp
       <p className="mb-2 text-sm font-semibold text-primary">Soluzione</p>
       <p className="mb-3 text-sm">{item.solution}</p>
       <p className="mb-2 text-sm font-semibold text-primary">Risultato</p>
-      <p className="text-sm text-muted-foreground">{item.result}</p>
+      <p className="text-sm text-foreground">{item.result}</p>
     </div>
   )
 }

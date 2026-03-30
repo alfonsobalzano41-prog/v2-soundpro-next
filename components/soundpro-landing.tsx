@@ -176,7 +176,7 @@ const caseStudies: CaseStudy[] = [
       "/cases/case3/case3-5.jpeg",
     ],
     problem: "Confusione nei transienti.",
-    solution: "Mix di assorbitori e diffusori posizionati ad-hoc.",
+    solution: "Bass trap e mix di assorbitori e diffusori posizionati ad-hoc.",
     result: "Dettaglio e precisione, con un suono più naturale.",
   },
   {
@@ -189,7 +189,7 @@ const caseStudies: CaseStudy[] = [
       "/cases/case4/case4-4.jpg",
     ],
     problem: "Rimbombo eccessivo, problemi di fase.",
-    solution: "Mix di diffusori e assorbitori su misura.",
+    solution: "Bass trap e mix di diffusori e assorbitori su misura.",
     result: "Dettaglio e precisione, immagine stereofonica più coerente.",
   },
 ]
@@ -556,7 +556,7 @@ export function SoundProLanding() {
                     </h2>
                     <div className="mx-auto mt-4 max-w-[40rem] space-y-2 text-sm leading-relaxed text-white/88 sm:text-base md:text-[1.04rem]">
                       <p>
-                        Sound Pro Acoustic Design nasce nel 2022 a Ercolano, dall&apos;incontro tra musica, acustica e cura artigianale del dettaglio.
+                        Sound Pro Acoustic Design nasce nel 2022 a Ercolano, dall&apos;incontro tra musica, acustica e cura artigianale del{"\u00A0"}dettaglio.
                       </p>
                       <p>
                         Progettiamo interventi acustici per spazi in cui il suono non può essere lasciato al caso, con un approccio concreto e attenzione anche all&apos;estetica.
@@ -617,7 +617,7 @@ export function SoundProLanding() {
                         <h2 className="mt-3 text-3xl font-bold tracking-tighter text-white sm:text-4xl md:text-[2.8rem]">Chi siamo</h2>
                         <div className="mx-auto mt-3 max-w-[39rem] space-y-2 text-sm leading-relaxed text-white/88 sm:text-[0.98rem] md:text-[1.02rem]">
                           <p>
-                            Sound Pro Acoustic Design nasce nel 2022 a Ercolano, dall&apos;incontro tra musica, acustica e cura artigianale del dettaglio.
+                            Sound Pro Acoustic Design nasce nel 2022 a Ercolano, dall&apos;incontro tra musica, acustica e cura artigianale del{"\u00A0"}dettaglio.
                           </p>
                           <p>
                             Progettiamo interventi acustici per spazi in cui il suono non può essere lasciato al caso, con un approccio concreto e attenzione anche all&apos;estetica.
@@ -672,9 +672,9 @@ export function SoundProLanding() {
               {[
                 {
                   step: "1",
-                  title: "Sopralluogo e Misurazione",
+                  title: "Analisi e misurazione",
                   description:
-                    "Visitiamo il tuo spazio e rileviamo con strumenti professionali la risposta in frequenze, riverbero e problemi di fase, per partire da dati reali.",
+                    "Analizziamo il tuo spazio e rileviamo con strumenti professionali la risposta in frequenze, riverbero e problemi di fase, per partire da dati reali.",
                 },
                 {
                   step: "2",
@@ -685,7 +685,7 @@ export function SoundProLanding() {
                 {
                   step: "3",
                   title: "Realizzazione Artigianale",
-                  description: "Costruiamo ogni elemento a mano, con materiali di alta qualità. Installazione professionale su richiesta.",
+                  description: "Costruiamo ogni elemento a mano, con materiali di alta qualità. Installazione professionale.",
                 },
               ].map((item, index) => (
                 <motion.div
@@ -1034,9 +1034,9 @@ export function SoundProLanding() {
                 <Image
                   src="/soundpro-logo.png"
                   alt="SoundPro Acoustic"
-                  width={120}
-                  height={40}
-                  className="h-8 w-auto"
+                  width={192}
+                  height={64}
+                  className="h-30 w-auto"
                 />
               </div>
               <p className="text-sm text-muted-foreground">
