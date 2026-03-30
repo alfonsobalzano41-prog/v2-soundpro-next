@@ -1030,7 +1030,7 @@ export function SoundProLanding() {
         <div className="w-full px-4 md:px-6 lg:px-8 py-8 max-w-full">
           <div className="grid gap-8 md:grid-cols-3 max-w-[90rem] mx-auto">
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
+              <div className="-ml-3 flex items-center gap-2 md:ml-0">
                 <Image
                   src="/soundpro-logo.png"
                   alt="SoundPro Acoustic"
