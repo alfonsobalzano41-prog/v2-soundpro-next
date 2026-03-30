@@ -16,14 +16,13 @@ type HeroWorkShowcaseCardProps = {
 
 // Reversible Hero config: timing and motion can be tuned/disabled in one place.
 const HERO_SHOWCASE_CONFIG = {
-  rotationIntervalMs: 4500,
-  floatDurationSeconds: 6.8,
-  crossfadeSeconds: 0.75,
+  rotationIntervalMs: 5800,
+  crossfadeSeconds: 1.15,
   preloadAhead: 2,
-  baseScale: 1,
-  activeScale: 1.014,
-  hoverScale: 1.01,
-  exitScale: 1.008,
+  fadeHoldProgress: 0.55,
+  entryScale: 1.065,
+  activeScale: 1.04,
+  fallbackSrc: "/hero-product.jpg",
 }
 
 // Hero photos already present in /public.
@@ -63,18 +62,17 @@ const HERO_SHOWCASE_IMAGES: HeroShowcaseImage[] = [
 
 export function HeroWorkShowcaseCard({ enabled = true }: HeroWorkShowcaseCardProps) {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
   const [fallbackBySrc, setFallbackBySrc] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
-    if (!enabled || HERO_SHOWCASE_IMAGES.length <= 1 || isHovered) return
+    if (!enabled || HERO_SHOWCASE_IMAGES.length <= 1) return
 
     const timer = window.setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % HERO_SHOWCASE_IMAGES.length)
     }, HERO_SHOWCASE_CONFIG.rotationIntervalMs)
 
     return () => window.clearInterval(timer)
-  }, [enabled, isHovered])
+  }, [enabled])
 
   useEffect(() => {
     if (!enabled || HERO_SHOWCASE_IMAGES.length === 0) return
@@ -95,43 +93,33 @@ export function HeroWorkShowcaseCard({ enabled = true }: HeroWorkShowcaseCardPro
   if (!enabled || HERO_SHOWCASE_IMAGES.length === 0) return null
 
   const activeImage = HERO_SHOWCASE_IMAGES[activeIndex]
-  const resolvedSrc = fallbackBySrc[activeImage.src] ? "/hero-product.jpg" : activeImage.src
+  const resolvedSrc = fallbackBySrc[activeImage.src] ? HERO_SHOWCASE_CONFIG.fallbackSrc : activeImage.src
+  const slideMotionDurationSeconds =
+    HERO_SHOWCASE_CONFIG.rotationIntervalMs / 1000 + HERO_SHOWCASE_CONFIG.crossfadeSeconds
 
   return (
-    <motion.div
-      // Organic premium interaction: light zoom/lift and richer shadow on hover.
-      className="group relative h-full w-full"
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      animate={isHovered ? { scale: HERO_SHOWCASE_CONFIG.hoverScale, y: -3 } : { scale: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: "easeOut" }}
-      whileHover={{
-        boxShadow: "0 28px 58px rgba(31, 41, 55, 0.28)",
-      }}
-    >
-      <motion.div
-        className="absolute inset-0"
-        animate={isHovered ? { y: -1 } : { y: [0, -7, 0] }}
-        transition={
-          isHovered
-            ? { duration: 0.5, ease: "easeOut" }
-            : {
-                duration: HERO_SHOWCASE_CONFIG.floatDurationSeconds,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }
-        }
-      >
-        <AnimatePresence mode="wait">
+    <div className="relative h-full w-full overflow-hidden bg-slate-950">
+      <div className="absolute inset-0 overflow-hidden">
+        <AnimatePresence initial={false} mode="sync">
           <motion.div
             key={activeImage.src}
-            className="relative h-full w-full"
-            initial={{ opacity: 0, scale: HERO_SHOWCASE_CONFIG.baseScale }}
-            animate={{ opacity: 1, scale: HERO_SHOWCASE_CONFIG.activeScale }}
-            exit={{ opacity: 0, scale: HERO_SHOWCASE_CONFIG.exitScale }}
+            className="absolute inset-[-2px] transform-gpu will-change-transform"
+            initial={{ opacity: 0, scale: HERO_SHOWCASE_CONFIG.entryScale }}
+            animate={{
+              opacity: [0, 1, 1],
+              scale: HERO_SHOWCASE_CONFIG.activeScale,
+            }}
+            exit={{ opacity: [1, 1, 0] }}
             transition={{
-              duration: HERO_SHOWCASE_CONFIG.crossfadeSeconds,
-              ease: "easeInOut",
+              opacity: {
+                duration: HERO_SHOWCASE_CONFIG.crossfadeSeconds,
+                times: [0, HERO_SHOWCASE_CONFIG.fadeHoldProgress, 1],
+                ease: "easeInOut",
+              },
+              scale: {
+                duration: slideMotionDurationSeconds,
+                ease: "easeOut",
+              },
             }}
           >
             <Image
@@ -140,7 +128,7 @@ export function HeroWorkShowcaseCard({ enabled = true }: HeroWorkShowcaseCardPro
               fill
               priority={activeIndex === 0}
               sizes="(min-width: 1536px) 58rem, (min-width: 1280px) 53rem, (min-width: 1024px) 48vw, 100vw"
-              className="object-cover transition-[filter] duration-500 group-hover:brightness-110"
+              className="object-cover [backface-visibility:hidden] [transform:translateZ(0)]"
               style={{ objectPosition: activeImage.objectPosition ?? "center center" }}
               onError={() => {
                 setFallbackBySrc((prev) => {
@@ -151,8 +139,8 @@ export function HeroWorkShowcaseCard({ enabled = true }: HeroWorkShowcaseCardPro
             />
           </motion.div>
         </AnimatePresence>
-      </motion.div>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/5 transition-opacity duration-500 group-hover:opacity-80" />
-    </motion.div>
+      </div>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/5" />
+    </div>
   )
 }
