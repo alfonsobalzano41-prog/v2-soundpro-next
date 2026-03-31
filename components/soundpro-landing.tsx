@@ -296,14 +296,22 @@ export function SoundProLanding() {
       >
           <div className="w-full px-4 md:px-6 lg:px-8 flex h-16 items-center justify-between max-w-full">
             <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center space-x-3">
+            <Link
+              href="#hero"
+              className="flex items-center space-x-3"
+              onClick={(event) => {
+                event.preventDefault()
+                scrollToSection("hero", { updateHash: false })
+                setIsMenuOpen(false)
+              }}
+            >
               <Image
                 src="/soundpro-logo.png"
                 alt="SoundPro Acoustic"
                 width={260}
                 height={120}
                 priority
-                className="h-16 md:h-20 w-auto"
+                className="h-11 sm:h-12 md:h-20 w-auto"
               />
             </Link>
           </div>
@@ -379,7 +387,7 @@ export function SoundProLanding() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="landing-hero-section relative flex w-full min-h-screen items-center overflow-hidden">
+        <section id="hero" className="landing-hero-section relative flex w-full min-h-screen items-center overflow-hidden">
           <div className="landing-hero-content relative z-10 w-full max-w-full px-4 md:px-6 lg:px-8">
             <div className="landing-hero-grid mx-auto grid max-w-[92rem] items-center gap-8 lg:grid-cols-2 lg:gap-12">
               <motion.div
@@ -461,7 +469,7 @@ export function SoundProLanding() {
                       variant="outline"
                       size="lg"
                       className="rounded-full"
-                      onClick={() => scrollToSection("why", { updateHash: false })}
+                      onClick={() => scrollToSection("chi-siamo", { updateHash: false })}
                     >
                       Scopri di più
                     </Button>
@@ -472,30 +480,40 @@ export function SoundProLanding() {
                 initial={false}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="landing-hero-media-shell flex h-full items-center justify-center"
+                className="landing-hero-media-shell flex h-full max-w-full items-center justify-center overflow-hidden lg:justify-end"
               >
-                <motion.div
-                  animate={floatingAnimation}
-                  className={`landing-hero-media relative h-[360px] w-full sm:h-[460px] md:h-[560px] lg:h-auto ${
-                    ENABLE_HERO_DESKTOP_DEZOOM
-                      ? "lg:-mr-8 xl:-mr-10 lg:w-[122%] xl:w-[128%] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[680px]"
-                      : "lg:-mr-16 lg:w-[135%] xl:w-[140%] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[720px]"
-                  } overflow-hidden rounded-[40px] flex items-center justify-center shadow-2xl lg:ml-auto`}
+                <Link
+                  href="#cases"
+                  aria-label="Vai ai lavori"
+                  className="block h-full w-full max-w-full rounded-[40px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    scrollToSection("cases")
+                  }}
                 >
-                {/* Reversible Hero visual upgrade: auto-rotating showcase card */}
-                {ENABLE_HERO_WORK_SHOWCASE ? (
-                  <HeroWorkShowcaseCard />
-                ) : (
-                  <Image
-                    src="/hero-product.jpg"
-                    alt="Pannello acustico personalizzato"
-                    fill
-                    priority
-                    sizes="(min-width: 1280px) 48vw, (min-width: 1024px) 50vw, 100vw"
-                    className="object-cover rounded-3xl"
-                  />
-                )}
-                </motion.div>
+                  <motion.div
+                    animate={floatingAnimation}
+                    className={`landing-hero-media relative h-[360px] w-full max-w-full cursor-pointer sm:h-[460px] md:h-[560px] lg:h-auto ${
+                      ENABLE_HERO_DESKTOP_DEZOOM
+                        ? "lg:w-full lg:max-w-[46rem] xl:max-w-[50rem] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[680px]"
+                        : "lg:w-full lg:max-w-[48rem] xl:max-w-[52rem] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[720px]"
+                    } overflow-hidden rounded-[40px] flex items-center justify-center shadow-2xl transition-shadow lg:ml-auto`}
+                  >
+                    {/* Reversible Hero visual upgrade: auto-rotating showcase card */}
+                    {ENABLE_HERO_WORK_SHOWCASE ? (
+                      <HeroWorkShowcaseCard />
+                    ) : (
+                      <Image
+                        src="/hero-product.jpg"
+                        alt="Pannello acustico personalizzato"
+                        fill
+                        priority
+                        sizes="(min-width: 1280px) 48vw, (min-width: 1024px) 50vw, 100vw"
+                        className="object-cover rounded-3xl"
+                      />
+                    )}
+                  </motion.div>
+                </Link>
               </motion.div>
             </div>
           </div>
