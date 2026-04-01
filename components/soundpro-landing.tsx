@@ -692,7 +692,7 @@ export function SoundProLanding() {
                   step: "1",
                   title: "Analisi e misurazione",
                   description:
-                    "Analizziamo il tuo spazio e rileviamo con strumenti professionali la risposta in frequenze, riverbero e problemi di fase, per partire da dati reali.",
+                    "Analizziamo il tuo spazio e rileviamo con strumenti professionali la risposta in frequenza, riverbero e problemi di fase, per partire da dati reali.",
                 },
                 {
                   step: "2",
