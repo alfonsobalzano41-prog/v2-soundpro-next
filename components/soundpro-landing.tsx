@@ -311,7 +311,7 @@ export function SoundProLanding() {
                 width={260}
                 height={120}
                 priority
-                className="h-11 sm:h-12 md:h-20 w-auto"
+                className="h-11 sm:h-12 md:h-12 lg:h-14 w-auto"
               />
             </Link>
           </div>
