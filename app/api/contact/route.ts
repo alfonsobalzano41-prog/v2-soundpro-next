@@ -3,6 +3,13 @@ import { NextResponse } from "next/server"
 const MAX_ATTACHMENTS = 5
 const MAX_FILE_SIZE_BYTES = 8 * 1024 * 1024
 
+class MissingEnvVarError extends Error {
+  constructor(public readonly key: string) {
+    super(`Missing required env var: ${key}`)
+    this.name = "MissingEnvVarError"
+  }
+}
+
 function escapeHtml(value: string) {
   return value
     .replaceAll("&", "&amp;")
@@ -15,9 +22,13 @@ function escapeHtml(value: string) {
 function getRequiredEnvVar(key: string) {
   const value = process.env[key]
   if (!value) {
-    throw new Error(`Missing required env var: ${key}`)
+    throw new MissingEnvVarError(key)
   }
   return value
+}
+
+function jsonError(status: number, code: string, error: string) {
+  return NextResponse.json({ code, error }, { status })
 }
 
 export async function POST(request: Request) {
@@ -33,19 +44,19 @@ export async function POST(request: Request) {
     const privacyAccepted = formData.get("privacyAccepted")
 
     if (!name || !email || !service || !privacyAccepted) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+      return jsonError(400, "MISSING_FIELDS", "Missing required fields")
     }
 
     const attachmentEntries = formData.getAll("attachments").filter((item): item is File => item instanceof File)
     const attachments = attachmentEntries.filter((file) => file.size > 0)
 
     if (attachments.length > MAX_ATTACHMENTS) {
-      return NextResponse.json({ error: "Too many attachments" }, { status: 400 })
+      return jsonError(400, "TOO_MANY_ATTACHMENTS", "Too many attachments")
     }
 
     const oversizedFile = attachments.find((file) => file.size > MAX_FILE_SIZE_BYTES)
     if (oversizedFile) {
-      return NextResponse.json({ error: "File too large" }, { status: 400 })
+      return jsonError(400, "FILE_TOO_LARGE", "File too large")
     }
 
     const resendApiKey = getRequiredEnvVar("RESEND_API_KEY")
@@ -114,12 +125,18 @@ export async function POST(request: Request) {
 
     if (!resendResponse.ok) {
       const errorPayload = await resendResponse.text()
-      return NextResponse.json({ error: "Email send failed", details: errorPayload }, { status: 502 })
+      console.error("Resend API error:", resendResponse.status, errorPayload)
+      return jsonError(502, "EMAIL_PROVIDER_ERROR", "Email send failed")
     }
 
     return NextResponse.json({ ok: true }, { status: 200 })
   } catch (error) {
+    if (error instanceof MissingEnvVarError) {
+      console.error("Contact API config error:", error.message)
+      return jsonError(500, "SERVER_NOT_CONFIGURED", "Contact form server is not configured")
+    }
+
     console.error("Contact API error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return jsonError(500, "INTERNAL_SERVER_ERROR", "Internal server error")
   }
 }

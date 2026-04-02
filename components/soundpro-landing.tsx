@@ -270,14 +270,36 @@ export function SoundProLanding() {
       })
 
       if (!response.ok) {
-        throw new Error("submit_failed")
+        let errorCode = ""
+
+        try {
+          const payload = (await response.json()) as { code?: string }
+          errorCode = payload.code || ""
+        } catch {
+          errorCode = ""
+        }
+
+        switch (errorCode) {
+          case "MISSING_FIELDS":
+            throw new Error("Compila tutti i campi obbligatori prima di inviare.")
+          case "TOO_MANY_ATTACHMENTS":
+            throw new Error("Puoi caricare al massimo 5 allegati.")
+          case "FILE_TOO_LARGE":
+            throw new Error("Ogni allegato deve essere sotto gli 8 MB.")
+          case "SERVER_NOT_CONFIGURED":
+            throw new Error("Il sito e' online, ma il server del form non e' configurato correttamente.")
+          case "EMAIL_PROVIDER_ERROR":
+            throw new Error("Il server del form e' attivo, ma il provider email ha rifiutato l'invio.")
+          default:
+            throw new Error("Invio non riuscito. Riprova tra poco o contattaci via email.")
+        }
       }
 
       setIsFormCompleted(true)
       setSelectedFilesCount(0)
       form.reset()
-    } catch {
-      setFormError("Invio non riuscito. Riprova tra poco o contattaci via email.")
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : "Invio non riuscito. Riprova tra poco o contattaci via email.")
     } finally {
       setIsSubmitting(false)
     }
