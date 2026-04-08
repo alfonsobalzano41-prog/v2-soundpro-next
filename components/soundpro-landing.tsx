@@ -202,10 +202,20 @@ export function SoundProLanding() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedFilesCount, setSelectedFilesCount] = useState(0)
   const [aboutPanelImageSrc, setAboutPanelImageSrc] = useState(ABOUT_SECTION_CONFIG.photoSrc)
+  const [isHeroMediaReady, setIsHeroMediaReady] = useState(false)
   // Feature flags
   const ENABLE_SECTION_DIVIDERS = false
   const ENABLE_HERO_WORK_SHOWCASE = true // reversible: set false to restore single static hero image
   const ENABLE_CASES_VISUAL_GALLERY = true // reversible: set false to keep all case cards in static mode
+  const heroMediaClassName = `landing-hero-media relative h-[360px] w-full max-w-full cursor-pointer sm:h-[460px] md:h-[560px] lg:h-auto ${
+    ENABLE_HERO_DESKTOP_DEZOOM
+      ? "lg:w-full lg:max-w-[46rem] xl:max-w-[50rem] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[680px]"
+      : "lg:w-full lg:max-w-[48rem] xl:max-w-[52rem] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[720px]"
+  } overflow-hidden rounded-[40px] flex items-center justify-center shadow-2xl transition-shadow lg:ml-auto`
+
+  const revealHeroMedia = () => {
+    setIsHeroMediaReady((current) => (current ? current : true))
+  }
 
   useEffect(() => {
     let rafId = 0
@@ -421,31 +431,16 @@ export function SoundProLanding() {
               >
                 <div className="space-y-3">
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-muted-foreground/80 sm:text-xs md:text-sm">
-                    <motion.span
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.45, delay: 0.1 }}
-                      className="inline-flex items-center gap-3 whitespace-nowrap"
-                    >
+                    <span className="inline-flex items-center gap-3 whitespace-nowrap">
                       <span aria-hidden="true" className="h-px w-6 bg-primary/35" />
                       <span>Pannelli acustici su misura</span>
-                    </motion.span>
+                    </span>
                     <span aria-hidden="true" className="h-1 w-1 rounded-full bg-primary/35" />
-                    <motion.span
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.45, delay: 0.15 }}
-                      className="whitespace-nowrap"
-                    >
+                    <span className="whitespace-nowrap">
                       Spazio sonoro ottimizzato
-                    </motion.span>
+                    </span>
                   </div>
-                  <motion.h1
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.2 }}
-                    className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
-                  >
+                  <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                     Il tuo spazio suona male?{" "}
                     <motion.span
                       className="bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent inline-block"
@@ -454,22 +449,12 @@ export function SoundProLanding() {
                     >
                       Scopri come trasformarlo in 48 ore.
                     </motion.span>
-                  </motion.h1>
-                  <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.4 }}
-                    className="max-w-[600px] text-muted-foreground md:text-xl"
-                  >
+                  </h1>
+                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
                     Non sono i pannelli che mancano. È l&apos;analisi giusta. Progettiamo l&apos;acustica del tuo spazio nei minimi dettagli.
-                  </motion.p>
+                  </p>
                 </div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.6 }}
-                  className="flex flex-col gap-3 sm:flex-row"
-                >
+                <div className="flex flex-col gap-3 sm:flex-row">
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button
                       size="lg"
@@ -496,7 +481,7 @@ export function SoundProLanding() {
                       Scopri di più
                     </Button>
                   </motion.div>
-                </motion.div>
+                </div>
               </motion.div>
               <motion.div
                 initial={false}
@@ -507,33 +492,79 @@ export function SoundProLanding() {
                 <Link
                   href="#cases"
                   aria-label="Vai ai lavori"
+                  aria-busy={!isHeroMediaReady}
                   className="block h-full w-full max-w-full rounded-[40px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                   onClick={(event) => {
                     event.preventDefault()
                     scrollToSection("cases")
                   }}
                 >
-                  <motion.div
-                    animate={floatingAnimation}
-                    className={`landing-hero-media relative h-[360px] w-full max-w-full cursor-pointer sm:h-[460px] md:h-[560px] lg:h-auto ${
-                      ENABLE_HERO_DESKTOP_DEZOOM
-                        ? "lg:w-full lg:max-w-[46rem] xl:max-w-[50rem] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[680px]"
-                        : "lg:w-full lg:max-w-[48rem] xl:max-w-[52rem] lg:aspect-[16/9] xl:aspect-[20/11] lg:max-h-[720px]"
-                    } overflow-hidden rounded-[40px] flex items-center justify-center shadow-2xl transition-shadow lg:ml-auto`}
-                  >
-                    {/* Reversible Hero visual upgrade: auto-rotating showcase card */}
-                    {ENABLE_HERO_WORK_SHOWCASE ? (
-                      <HeroWorkShowcaseCard />
-                    ) : (
-                      <Image
-                        src="/hero-product.jpg"
-                        alt="Pannello acustico personalizzato"
-                        fill
-                        priority
-                        sizes="(min-width: 1280px) 48vw, (min-width: 1024px) 50vw, 100vw"
-                        className="object-cover rounded-3xl"
+                  <motion.div animate={floatingAnimation} className={heroMediaClassName}>
+                    {/* Reserved placeholder keeps the hero card polished until the first visual is ready. */}
+                    <motion.div
+                      initial={false}
+                      animate={{
+                        opacity: isHeroMediaReady ? 0 : 1,
+                        scale: isHeroMediaReady ? 1.02 : 1,
+                        filter: isHeroMediaReady ? "blur(12px)" : "blur(0px)",
+                      }}
+                      transition={{ duration: 0.55, ease: easeInOut }}
+                      className="pointer-events-none absolute inset-0 rounded-[inherit]"
+                      aria-hidden="true"
+                    >
+                      <div className="absolute inset-0 bg-[linear-gradient(135deg,#101926_0%,#152736_45%,#0f172a_100%)]" />
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.22),transparent_42%),radial-gradient(circle_at_80%_24%,rgba(125,211,252,0.18),transparent_36%)]" />
+                      <motion.div
+                        aria-hidden="true"
+                        animate={{ x: ["-48%", "52%"] }}
+                        transition={{ duration: 2.8, ease: "linear", repeat: Infinity }}
+                        className="absolute inset-y-0 -left-1/3 w-1/2 bg-gradient-to-r from-transparent via-white/12 to-transparent mix-blend-screen"
                       />
-                    )}
+                      <div className="absolute inset-x-7 bottom-7 space-y-3 sm:inset-x-9 sm:bottom-9">
+                        <motion.div
+                          animate={{ opacity: [0.45, 0.85, 0.45] }}
+                          transition={{ duration: 2.6, repeat: Infinity, ease: easeInOut }}
+                          className="h-2.5 w-24 rounded-full bg-white/30"
+                        />
+                        <motion.div
+                          animate={{ opacity: [0.3, 0.7, 0.3] }}
+                          transition={{ duration: 2.9, repeat: Infinity, ease: easeInOut, delay: 0.15 }}
+                          className="h-3.5 w-40 rounded-full bg-white/20"
+                        />
+                        <div className="grid grid-cols-[1.15fr_0.85fr] gap-3">
+                          <div className="h-28 rounded-[28px] border border-white/10 bg-white/[0.08] backdrop-blur-sm sm:h-32" />
+                          <div className="space-y-3">
+                            <div className="h-14 rounded-[24px] border border-white/10 bg-white/[0.08] backdrop-blur-sm" />
+                            <div className="h-14 rounded-[24px] border border-white/10 bg-white/[0.06] backdrop-blur-sm" />
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                    <motion.div
+                      initial={false}
+                      animate={{
+                        opacity: isHeroMediaReady ? 1 : 0,
+                        scale: isHeroMediaReady ? 1 : 0.985,
+                        filter: isHeroMediaReady ? "blur(0px)" : "blur(18px)",
+                      }}
+                      transition={{ duration: 0.65, ease: easeInOut }}
+                      className="absolute inset-0"
+                    >
+                      {/* Reversible Hero visual upgrade: auto-rotating showcase card */}
+                      {ENABLE_HERO_WORK_SHOWCASE ? (
+                        <HeroWorkShowcaseCard onReady={revealHeroMedia} />
+                      ) : (
+                        <Image
+                          src="/hero-product.jpg"
+                          alt="Pannello acustico personalizzato"
+                          fill
+                          priority
+                          sizes="(min-width: 1280px) 48vw, (min-width: 1024px) 50vw, 100vw"
+                          className="object-cover"
+                          onLoad={revealHeroMedia}
+                        />
+                      )}
+                    </motion.div>
                   </motion.div>
                 </Link>
               </motion.div>
@@ -1122,6 +1153,18 @@ export function SoundProLanding() {
                 <br />
                 info@soundproacoustic.com
               </p>
+              <div className="pt-2">
+                <p className="text-[0.68rem] font-medium uppercase tracking-[0.18em] text-muted-foreground/65">
+                  Dati legali
+                </p>
+                <div className="mt-2 space-y-1 text-[0.8rem] leading-[1.65] text-muted-foreground/80">
+                  <p>Sound Pro Acoustic Design</p>
+                  <p>marchio gestito da Consorzio Coins</p>
+                  <p>P.IVA 01242370623</p>
+                  <p>Sede legale: Via Giuseppe Mazzini 6</p>
+                  <p>80046 San Giorgio a Cremano (NA)</p>
+                </div>
+              </div>
             </div>
           </div>
           <div className="border-t mt-8 pt-8 flex flex-col items-center justify-between gap-4 md:flex-row max-w-[90rem] mx-auto">

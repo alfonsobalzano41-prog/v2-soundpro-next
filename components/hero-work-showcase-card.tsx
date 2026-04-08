@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { AnimatePresence, motion } from "framer-motion"
 
@@ -12,13 +12,14 @@ type HeroShowcaseImage = {
 
 type HeroWorkShowcaseCardProps = {
   enabled?: boolean
+  onReady?: () => void
 }
 
 // Reversible Hero config: timing and motion can be tuned/disabled in one place.
 const HERO_SHOWCASE_CONFIG = {
   rotationIntervalMs: 5800,
   crossfadeSeconds: 1.15,
-  preloadAhead: 2,
+  preloadAhead: 1,
   fadeHoldProgress: 0.55,
   entryScale: 1.065,
   activeScale: 1.04,
@@ -60,9 +61,16 @@ const HERO_SHOWCASE_IMAGES: HeroShowcaseImage[] = [
   },
 ]
 
-export function HeroWorkShowcaseCard({ enabled = true }: HeroWorkShowcaseCardProps) {
+export function HeroWorkShowcaseCard({ enabled = true, onReady }: HeroWorkShowcaseCardProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [fallbackBySrc, setFallbackBySrc] = useState<Record<string, boolean>>({})
+  const hasReportedReadyRef = useRef(false)
+
+  const reportReady = () => {
+    if (hasReportedReadyRef.current) return
+    hasReportedReadyRef.current = true
+    onReady?.()
+  }
 
   useEffect(() => {
     if (!enabled || HERO_SHOWCASE_IMAGES.length <= 1) return
@@ -130,6 +138,7 @@ export function HeroWorkShowcaseCard({ enabled = true }: HeroWorkShowcaseCardPro
               sizes="(min-width: 1536px) 58rem, (min-width: 1280px) 53rem, (min-width: 1024px) 48vw, 100vw"
               className="object-cover [backface-visibility:hidden] [transform:translateZ(0)]"
               style={{ objectPosition: activeImage.objectPosition ?? "center center" }}
+              onLoad={reportReady}
               onError={() => {
                 setFallbackBySrc((prev) => {
                   if (prev[activeImage.src]) return prev
